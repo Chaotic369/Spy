@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi-Latn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Spy</title>
+<meta name="theme-color" content="#0d0d0f">
 <style>
 :root{
   --bg:#0d0d0f; --ink:#e8e2d4; --muted:#8a8478; --line:#2a2827;
@@ -46,6 +47,37 @@ ul.players li{display:flex;justify-content:space-between;align-items:center;
 .votes button{margin-top:0}
 .score{color:var(--muted)}
 .err{color:#d98a8a;font-size:14px;margin:8px 0 0}
+
+/* ---- UI polish ---- */
+body{-webkit-tap-highlight-color:transparent;background-image:radial-gradient(900px 420px at 50% -140px,#1f1b14 0%,rgba(13,13,15,0) 70%);background-repeat:no-repeat}
+@supports(height:100dvh){#app{min-height:100dvh}}
+#app.in{animation:rise .32s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1.logo .dot{width:12px;height:12px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 4px rgba(184,146,90,.18);flex:none}
+.panel{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:14px 0}
+.panel.resume{border-color:var(--brass)}
+ul.players li:last-child{border-bottom:0}
+.pn{display:flex;align-items:center;gap:10px;min-width:0}
+.av{font-style:normal;flex:none;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#221f1a;border:1px solid var(--brass);color:var(--brass);font-size:14px}
+button{transition:transform .08s ease,background .2s ease,border-color .2s ease,color .2s ease}
+button:active:not(:disabled){transform:scale(.98)}
+button,input,select{border-radius:6px}
+.ghost.wide{width:100%;margin-top:14px;padding:11px 12px}
+.hint{color:var(--muted);font-size:13px;margin:8px 0 0;line-height:1.6}
+.hint .ghost{padding:3px 8px;font-size:12px;margin-left:4px}
+.hold{border-radius:10px;-webkit-touch-callout:none;transition:border-color .15s,background .15s}
+.hold:active{background:#1c1a21;border-color:#d7b27a}
+.prog{display:flex;gap:6px;margin:0 0 16px}
+.prog i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.prog i.on{background:var(--brass)}
+.big{font-size:76px;transition:color .3s,opacity .2s}
+.big.low{color:#d98a8a}
+.big.paused{opacity:.45}
+.votes button.vb{display:flex;align-items:center;gap:12px;text-align:left}
+.votes button.vb.sel{border-color:var(--blood);background:rgba(142,42,42,.22);color:#f0d0d0}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:#221f1a;border:1px solid var(--brass);color:var(--ink);padding:10px 16px;border-radius:6px;font-size:14px;max-width:86vw;text-align:center;pointer-events:none;transition:opacity .25s,transform .25s;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -154,8 +186,155 @@ const PACKS_HARD = {
   ]
 };
 
+/* ---------- Extra words (merged and de-duplicated at runtime) ---------- */
+var PACKS_EASY_MORE = {
+  "Khana (Food)": [
+    ["Aloo tikki","Veg cutlet"],["Butter chicken","Kadai chicken"],["Dal makhani","Dal tadka"],["Palak paneer","Sarson ka saag"],
+    ["Papdi chaat","Aloo chaat"],["Barfi","Peda"],["Ladoo","Gujiya"],["Gajar halwa","Moong dal halwa"],
+    ["Milkshake","Smoothie"],["Nimbu pani","Shikanji"],["Hot dog","Sub sandwich"],["French fries","Potato wedges"],
+    ["Garlic bread","Breadsticks"],["Brownie","Muffin"],["Pancake","Waffle"],["Omelette","Egg bhurji"],
+    ["Cornflakes","Muesli"],["Aloo paratha","Gobi paratha"],["Rumali roti","Kulcha"],["Green tea","Black tea"]
+  ],
+  "Jagah (Places)": [
+    ["Petrol pump","Gas agency"],["Salon","Spa"],["Post office","Courier office"],["Fire station","Army camp"],
+    ["Bakery","Sweet shop"],["Supermarket","Kirana store"],["Medical store","Pathology lab"],["ATM","Cash deposit machine"],
+    ["Waterfall","River"],["Island","Peninsula"],["Cave","Tunnel"],["Playground","Amusement park"],
+    ["Parking lot","Garage"],["Bedroom","Drawing room"],["Courtyard","Verandah"],["Classroom","Auditorium"],
+    ["Church","Mosque"],["Fort","Palace"],["Railway track","Expressway"],["Fair","Circus"]
+  ],
+  "Film (Bollywood)": [
+    ["Jawan","Animal"],["Tiger Zinda Hai","Ek Tha Tiger"],["Chennai Express","Happy New Year"],["Yeh Jawaani Hai Deewani","Wake Up Sid"],
+    ["Dilwale Dulhania Le Jayenge","Veer-Zaara"],["Krrish","Ra.One"],["Bang Bang","Fighter"],["PK","OMG"],
+    ["Student of the Year","2 States"],["Housefull","Welcome"],["Uri","Shershaah"],["Pushpa","RRR"],
+    ["Kick","Ready"],["Gangs of Wasseypur","Sarkar"],["Mr. India","Koi... Mil Gaya"],["Kaho Naa Pyaar Hai","Mohabbatein"],
+    ["Kabhi Khushi Kabhie Gham","Kabhi Alvida Naa Kehna"],["Don","Agneepath"],["Hum Saath Saath Hain","Hum Dil De Chuke Sanam"],["Saiyaara","Aashiqui 2"]
+  ],
+  "Cheezein (Objects)": [
+    ["Laptop","Tablet"],["Earphones","Headphones"],["Remote","Joystick"],["Fridge","Freezer"],
+    ["Iron","Hair dryer"],["Spoon","Fork"],["Plate","Bowl"],["Knife","Peeler"],
+    ["Towel","Napkin"],["Handbag","Tote bag"],["Key","Lock"],["Matchbox","Lighter"],
+    ["Candle","Diya"],["Balloon","Kite"],["Carrom board","Chessboard"],["Cricket bat","Hockey stick"],
+    ["Perfume","Deodorant"],["Lipstick","Nail polish"],["Tie","Scarf"],["Bulb","Tubelight"]
+  ],
+  "Janwar (Animals)": [
+    ["Rabbit","Hare"],["Butterfly","Moth"],["Whale","Orca"],["Crab","Lobster"],
+    ["Turtle","Tortoise"],["Swan","Goose"],["Bat","Flying squirrel"],["Cheetah","Panther"],
+    ["Bear","Panda"],["Pig","Wild boar"],["Sparrow","Starling"],["Mosquito","Housefly"],
+    ["Fish","Eel"],["Starfish","Jellyfish"],["Rooster","Turkey"],["Seagull","Tern"],
+    ["Alligator","Gharial"],["Yak","Bison"],["Hamster","Guinea pig"],["Snail","Slug"]
+  ],
+  "Khel (Sports)": [
+    ["Cricket","Baseball"],["Football","Rugby"],["Badminton","Tennis"],["Kabaddi","Kho-kho"],
+    ["Hockey","Polo"],["Chess","Ludo"],["Carrom","Snooker"],["Swimming","Diving"],
+    ["Boxing","Wrestling"],["Archery","Shooting"],["Cycling","Skating"],["Yoga","Aerobics"],
+    ["Table tennis","Squash"],["Sprint","Marathon"],["Long jump","High jump"],["Javelin","Discus"],
+    ["Volleyball","Basketball"],["Golf","Mini golf"],["Surfing","Kayaking"],["Weightlifting","Bodybuilding"],
+    ["Skiing","Snowboarding"],["Gilli danda","Lagori"],["Kite flying","Paragliding"],["Trekking","Camping"]
+  ],
+  "Pesha (Jobs)": [
+    ["Doctor","Nurse"],["Teacher","Professor"],["Police","Soldier"],["Pilot","Air hostess"],
+    ["Driver","Conductor"],["Chef","Waiter"],["Farmer","Gardener"],["Tailor","Cobbler"],
+    ["Carpenter","Electrician"],["Plumber","Mason"],["Singer","Dancer"],["Actor","Anchor"],
+    ["Lawyer","Judge"],["Barber","Beautician"],["Engineer","Architect"],["Shopkeeper","Hawker"],
+    ["Postman","Courier boy"],["Painter","Sculptor"],["Fisherman","Sailor"],["Photographer","Videographer"],
+    ["Journalist","Editor"],["Pandit","Maulvi"],["Watchman","Security guard"],["Milkman","Newspaper boy"]
+  ],
+  "Sheher (Cities)": [
+    ["Mumbai","Pune"],["Delhi","Noida"],["Jaipur","Jodhpur"],["Kolkata","Howrah"],
+    ["Chennai","Bengaluru"],["Hyderabad","Secunderabad"],["Lucknow","Kanpur"],["Goa","Pondicherry"],
+    ["Shimla","Manali"],["Agra","Mathura"],["Varanasi","Prayagraj"],["Amritsar","Ludhiana"],
+    ["Ahmedabad","Surat"],["Bhopal","Indore"],["Patna","Ranchi"],["Kochi","Munnar"],
+    ["Udaipur","Pushkar"],["Rishikesh","Haridwar"],["Darjeeling","Gangtok"],["Chandigarh","Mohali"],
+    ["Paris","London"],["Dubai","Abu Dhabi"],["New York","Los Angeles"],["Tokyo","Seoul"]
+  ]
+};
+
+var PACKS_HARD_MORE = {
+  "Khana (Food)": [
+    ["Paella","Risotto"],["Croissant","Danish"],["Falafel","Shawarma"],["Kimchi","Sauerkraut"],
+    ["Pad thai","Pho"],["Dim sum","Spring roll"],["Gnocchi","Ravioli"],["Lasagna","Cannelloni"],
+    ["Nachos","Tacos"],["Burrito","Quesadilla"],["Crepe","Galette"],["Macaron","Meringue"],
+    ["Churros","Donut"],["Pierogi","Empanada"],["Dhansak","Vindaloo"],["Dum aloo","Aloo posto"],
+    ["Fish curry","Fish fry"],["Thukpa","Wonton soup"],["Bisi bele bath","Lemon rice"],["Sabudana khichdi","Sabudana vada"]
+  ],
+  "Jagah (Places)": [
+    ["Stepwell","Reservoir"],["Cathedral","Basilica"],["Synagogue","Pagoda"],["Opera house","Concert hall"],
+    ["Art gallery","Auction house"],["Stock exchange","Commodity market"],["Customs office","Immigration desk"],["Bunker","Basement"],
+    ["Windmill","Watermill"],["Salt pan","Rice paddy"],["Canyon","Gorge"],["Fjord","Lagoon"],
+    ["Archipelago","Atoll"],["Savanna","Steppe"],["Tundra","Taiga"],["Mangrove","Swamp"],
+    ["Volcano","Geyser"],["Cloud kitchen","Food court"],["Co-working space","Incubator"],["Boarding school","Orphanage"]
+  ],
+  "Film (Bollywood)": [
+    ["Do Bigha Zamin","Bandini"],["Awara","Shree 420"],["Madhumati","Mahal"],["Sahib Bibi Aur Ghulam","Chaudhvin Ka Chand"],
+    ["Chhoti Si Baat","Rajnigandha"],["Sparsh","Koshish"],["Parinda","Sarfarosh"],["Dil Se","Bombay"],
+    ["Tamasha","Highway"],["Paan Singh Tomar","Special 26"],["Neerja","Airlift"],["Talvar","Rustom"],
+    ["Dev.D","Love Sex Aur Dhokha"],["Ship of Theseus","Killa"],["Fire","Earth"],["Kaminey","Ishqiya"],
+    ["Delhi Belly","Go Goa Gone"],["Khosla Ka Ghosla","Oye Lucky! Lucky Oye!"],["Chhapaak","Panga"],["Karthik Calling Karthik","Talaash"]
+  ],
+  "Cheezein (Objects)": [
+    ["Microscope","Periscope"],["Barometer","Hygrometer"],["Stopwatch","Metronome"],["Slide rule","Logarithm table"],
+    ["Spirit level","Plumb line"],["Wrench","Allen key"],["Screwdriver","Drill machine"],["Hacksaw","Chainsaw"],
+    ["Crowbar","Sledgehammer"],["Flute","Shehnai"],["Guitar","Ukulele"],["Trumpet","Bugle"],
+    ["Sarod","Santoor"],["Tanpura","Ektara"],["Gavel","Mallet"],["Quiver","Bow"],
+    ["Cauldron","Wok"],["Ladle","Whisk"],["Chandelier","Table lamp"],["Hookah","Smoking pipe"],
+    ["Globe","Atlas"],["Easel","Palette"],["Sewing machine","Knitting needle"]
+  ],
+  "Janwar (Animals)": [
+    ["Narwhal","Beluga"],["Axolotl","Salamander"],["Capybara","Nutria"],["Meerkat","Prairie dog"],
+    ["Aardvark","Numbat"],["Quokka","Bandicoot"],["Binturong","Civet"],["Serval","Caracal"],
+    ["Snow leopard","Clouded leopard"],["Red panda","Raccoon"],["Tarsier","Marmoset"],["Pika","Marmot"],
+    ["Takin","Ibex"],["Nilgai","Blackbuck"],["Mugger","Saltwater crocodile"],["King cobra","Krait"],
+    ["Monitor lizard","Skink"],["Bar-headed goose","Brahminy duck"],["Great Indian bustard","Sarus crane"],["Osprey","Harrier"],
+    ["Hummingbird","Sunbird"],["Cassowary","Rhea"]
+  ],
+  "Khel (Sports)": [
+    ["Fencing","Kendo"],["Curling","Bowls"],["Biathlon","Triathlon"],["Pole vault","Hammer throw"],
+    ["Decathlon","Heptathlon"],["Rowing","Canoeing"],["Water polo","Synchronised swimming"],["Lacrosse","Hurling"],
+    ["Pickleball","Padel"],["Netball","Handball"],["Judo","Karate"],["Taekwondo","Aikido"],
+    ["Sumo","Greco-Roman"],["Mallakhamb","Gymnastics"],["Pehlwani","Freestyle wrestling"],["Gatka","Kalaripayattu"],
+    ["Bridge","Rummy"],["Bobsleigh","Luge"],["Ice hockey","Field hockey"],["Parkour","Rock climbing"],
+    ["Motocross","Rally"],["Darts","Billiards"],["Sepak takraw","Footvolley"],["Equestrian","Dressage"],
+    ["Test match","Twenty20"]
+  ],
+  "Pesha (Jobs)": [
+    ["Surgeon","Anaesthetist"],["Pharmacist","Dietician"],["Astronomer","Astrologer"],["Archaeologist","Anthropologist"],
+    ["Economist","Statistician"],["Auditor","Accountant"],["Sommelier","Barista"],["Locksmith","Blacksmith"],
+    ["Goldsmith","Jeweller"],["Potter","Weaver"],["Lifeguard","Coastguard"],["Paramedic","Radiologist"],
+    ["Interpreter","Translator"],["Notary","Magistrate"],["Curator","Librarian"],["Cartographer","Surveyor"],
+    ["Urban planner","Civil engineer"],["Choreographer","Director"],["Mahout","Shepherd"],["Beekeeper","Poultry farmer"],
+    ["Falconer","Snake charmer"],["Priest","Monk"],["Stuntman","Acrobat"],["Cinematographer","Sound engineer"],
+    ["Air traffic controller","Flight engineer"]
+  ],
+  "Sheher (Cities)": [
+    ["Reykjavik","Oslo"],["Lisbon","Madrid"],["Vienna","Prague"],["Istanbul","Cairo"],
+    ["Kyoto","Osaka"],["Hanoi","Bangkok"],["Nairobi","Lagos"],["Sydney","Melbourne"],
+    ["Toronto","Vancouver"],["Rio de Janeiro","Buenos Aires"],["Mysuru","Hampi"],["Madurai","Thanjavur"],
+    ["Kozhikode","Kannur"],["Bhubaneswar","Puri"],["Guwahati","Shillong"],["Leh","Kargil"],
+    ["Srinagar","Jammu"],["Nashik","Aurangabad"],["Jabalpur","Gwalior"],["Ujjain","Omkareshwar"],
+    ["Dehradun","Mussoorie"],["Gandhinagar","Vadodara"],["Kolhapur","Satara"]
+  ]
+};
+
+var _packCache = {};
 function getPacks() {
-  return S.level === "mushkil" ? PACKS_HARD : PACKS_EASY;
+  var lvl = S.level === "mushkil" ? "mushkil" : "aasaan";
+  if (_packCache[lvl]) return _packCache[lvl];
+  var base = lvl === "mushkil" ? PACKS_HARD : PACKS_EASY;
+  var more = lvl === "mushkil" ? PACKS_HARD_MORE : PACKS_EASY_MORE;
+  var names = Object.keys(base);
+  Object.keys(more).forEach(function (k) { if (names.indexOf(k) < 0) names.push(k); });
+  var seen = {}, out = {};
+  names.forEach(function (k) {
+    out[k] = [];
+    (base[k] || []).concat(more[k] || []).forEach(function (pr) {
+      var a = wkey(pr[0]), b = wkey(pr[1]);
+      if (a === b || seen[a] || seen[b]) return;   // a word never appears twice in a level
+      seen[a] = 1; seen[b] = 1;
+      out[k].push(pr);
+    });
+  });
+  _packCache[lvl] = out;
+  return out;
 }
 
 /* ---------- State ---------- */
@@ -198,16 +377,170 @@ const alive = () => S.roster.filter(p => p.alive);
 const spiesAlive = () => S.roster.filter(p => p.role === "spy" && p.alive).length;
 const civsAlive = () => S.roster.filter(p => p.role === "civ" && p.alive).length;
 
+/* ---------- Local cache: names, settings, scores, used words ---------- */
+var LS_KEY = "spyGame.v3";
+var LS_ROUND = "spyGame.v3.round";
+S.draft = "";
+S.usedWords = {};
+S.deadline = 0;
+S.starter = "";
+S.voteSel = -1;
+S.resume = null;
+
+function wkey(w) { return String(w).trim().toLowerCase(); }
+function ini(n) { var a = Array.from(String(n)); return esc((a[0] || "?").toUpperCase()); }
+
+function saveState() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      players: S.players, level: S.level, pack: S.pack, spyCount: S.spyCount,
+      spyWord: S.spyWord, discussionMin: S.discussionMin, scores: S.scores,
+      usedWords: S.usedWords, round: S.round, draft: S.draft
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    var d = JSON.parse(localStorage.getItem(LS_KEY) || "null");
+    if (!d || typeof d !== "object") return;
+    if (Array.isArray(d.players)) {
+      var seen = {}, clean = [];
+      d.players.forEach(function (p) {
+        p = String(p).trim().slice(0, 16);
+        var k = p.toLowerCase();
+        if (p && !seen[k] && clean.length < 10) { seen[k] = 1; clean.push(p); }
+      });
+      S.players = clean;
+    }
+    if (d.level === "aasaan" || d.level === "mushkil") S.level = d.level;
+    if (typeof d.pack === "string") S.pack = d.pack;
+    if (d.spyCount >= 1 && d.spyCount <= 3) S.spyCount = Math.floor(d.spyCount);
+    if (d.spyWord === "twin" || d.spyWord === "none") S.spyWord = d.spyWord;
+    if ([3, 5, 8].indexOf(d.discussionMin) >= 0) S.discussionMin = d.discussionMin;
+    if (d.scores && typeof d.scores === "object") {
+      Object.keys(d.scores).forEach(function (k) {
+        var v = Number(d.scores[k]);
+        if (isFinite(v)) S.scores[k] = v;
+      });
+    }
+    if (d.usedWords && typeof d.usedWords === "object") {
+      Object.keys(d.usedWords).forEach(function (k) { S.usedWords[k] = 1; });
+    }
+    S.round = Number(d.round) || 0;
+    S.draft = typeof d.draft === "string" ? d.draft.slice(0, 16) : "";
+  } catch (e) {}
+}
+
+function saveDraft(v) {
+  S.draft = String(v).slice(0, 16);
+  saveState();
+}
+
+function saveRound(phase) {
+  try {
+    localStorage.setItem(LS_ROUND, JSON.stringify({
+      phase: phase, roster: S.roster, civWord: S.civWord, spyWordText: S.spyWordText,
+      round: S.round, timerLeft: S.timerLeft, starter: S.starter || "",
+      pack: S.pack, level: S.level
+    }));
+  } catch (e) {}
+}
+
+function clearRound() {
+  S.resume = null;
+  try { localStorage.removeItem(LS_ROUND); } catch (e) {}
+}
+
+function loadRoundSaved() {
+  try {
+    var r = JSON.parse(localStorage.getItem(LS_ROUND) || "null");
+    if (r && Array.isArray(r.roster) && r.roster.length >= 3 && r.civWord &&
+        r.roster.every(function (p) { return p && typeof p.name === "string" && (p.role === "spy" || p.role === "civ"); })) {
+      return r;
+    }
+  } catch (e) {}
+  return null;
+}
+
+function resumePanel() {
+  if (!S.resume) return "";
+  return `<div class="panel resume">
+      <label style="margin-top:0">Pichla round adhura reh gaya tha (Round ${Number(S.resume.round) || 1})</label>
+      <button class="primary" onclick="resumeRound()">Wahi se jaari rakho</button>
+      <button class="ghost wide" onclick="discardRound()">Chhod do</button>
+    </div>`;
+}
+
+function resumeRound() {
+  var r = S.resume;
+  if (!r) return;
+  S.roster = r.roster;
+  S.civWord = r.civWord;
+  S.spyWordText = r.spyWordText || null;
+  S.round = Number(r.round) || S.round;
+  S.timerLeft = Number(r.timerLeft) || 0;
+  S.starter = r.starter || "";
+  if (r.level === "aasaan" || r.level === "mushkil") S.level = r.level;
+  if (r.pack && getPacks()[r.pack]) S.pack = r.pack;
+  S.resume = null;
+  if (r.phase === "vote") renderVote();
+  else if (r.phase === "discussion") renderDiscussion(true);
+  else renderDiscussion(false);
+}
+
+function discardRound() {
+  clearRound();
+  renderSetup();
+}
+
+function packHint() {
+  var list = getPacks()[S.pack] || [];
+  var left = list.filter(function (p) {
+    return !S.usedWords[wkey(p[0])] && !S.usedWords[wkey(p[1])];
+  }).length;
+  return left + " / " + list.length + " naye pair bache hain. Ek baar aaya word dobara nahi aayega." +
+    ' <button class="ghost" onclick="resetWords()">Reset</button>';
+}
+
+function resetWords() {
+  if (!confirm("Saare used words phir se aa sakenge. Pakka?")) return;
+  S.usedWords = {};
+  saveState();
+  renderSetup();
+}
+
+function resetScores() {
+  if (!confirm("Saare scores zero karne hain?")) return;
+  S.scores = {};
+  saveState();
+  renderSetup();
+}
+
+function toast(msg) {
+  var t = document.getElementById("toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.className = "show";
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function () { t.className = ""; }, 3200);
+}
+
 /* ---------- Setup ---------- */
 function renderSetup() {
   S.screen = "setup";
   clearInterval(S.timerId);
+  if (!getPacks()[S.pack]) S.pack = Object.keys(getPacks())[0];
   const n = S.players.length;
   const maxSpy = Math.max(1, Math.floor((n - 1) / 2));   // spies must stay fewer than civilians
   S.spyCount = Math.min(S.spyCount, maxSpy);
 
   const list = S.players.map((p, i) =>
-    `<li><span>${esc(p)}</span><button class="ghost" onclick="removePlayer(${i})">hatao</button></li>`
+    `<li><span class="pn"><i class="av">${ini(p)}</i>${esc(p)}</span><button class="ghost" onclick="removePlayer(${i})">hatao</button></li>`
   ).join("");
 
   const packOpts = Object.keys(getPacks()).map(k =>
@@ -223,14 +556,15 @@ function renderSetup() {
     `<li><span>${esc(p)}</span><span class="score">${S.scores[p] || 0}</span></li>`).join("");
 
   app.innerHTML = `
-    <h1>Spy</h1>
+    <h1 class="logo"><span class="dot"></span>Spy</h1>
     <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
+        ${resumePanel()}
 
     <div class="panel">
       <label>Players (3 se 10)</label>
       <ul class="players">${list}</ul>
       <form class="row" onsubmit="addPlayer(event)">
-        <input id="newName" maxlength="16" placeholder="Naam likho" autocomplete="off" enterkeyhint="done">
+        <input id="newName" maxlength="16" placeholder="Naam likho" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" value="${esc(S.draft)}" oninput="saveDraft(this.value)">
         <button type="submit" class="ghost" style="padding:12px 16px" ${n >= 10 ? "disabled" : ""}>Add</button>
       </form>
       ${S.err ? `<p class="err">${esc(S.err)}</p>` : ""}
@@ -238,25 +572,26 @@ function renderSetup() {
 
     <div class="panel">
       <label>Kitne mushkil words?</label>
-      <select onchange="S.level=this.value">
+      <select onchange="S.level=this.value;saveState();renderSetup()">
         <option value="aasaan" ${S.level === "aasaan" ? "selected" : ""}>Aasaan</option>
         <option value="mushkil" ${S.level === "mushkil" ? "selected" : ""}>Mushkil</option>
       </select>
 
       <label>Word pack</label>
-      <select onchange="S.pack=this.value">${packOpts}</select>
+      <select onchange="S.pack=this.value;saveState();renderSetup()">${packOpts}</select>
+            <p class="hint">${packHint()}</p>
 
       <label>Spy kitne honge?</label>
-      <select onchange="S.spyCount=+this.value">${spyOpts}</select>
+      <select onchange="S.spyCount=+this.value;saveState()">${spyOpts}</select>
 
       <label>Spy ko word kaisa milega?</label>
-      <select onchange="S.spyWord=this.value">
+      <select onchange="S.spyWord=this.value;saveState()">
         <option value="twin" ${S.spyWord === "twin" ? "selected" : ""}>Milta-julta word (Undercover)</option>
         <option value="none" ${S.spyWord === "none" ? "selected" : ""}>Kuch nahi (Classic)</option>
       </select>
 
       <label>Discussion ka timer</label>
-      <select onchange="S.discussionMin=+this.value">${timerOpts}</select>
+      <select onchange="S.discussionMin=+this.value;saveState()">${timerOpts}</select>
     </div>
 
     <div class="panel">
@@ -268,7 +603,8 @@ function renderSetup() {
       <div class="panel">
         <label>Scoreboard</label>
         <ul class="players">${scoreRows}</ul>
-      </div>` : ""}
+                <button class="ghost wide" onclick="resetScores()">Scores zero karo</button>
+              </div>` : ""}
   `;
 }
 
@@ -282,32 +618,43 @@ function addPlayer(e) {
   }
   if (S.players.length >= 10) return;
   S.players.push(v);
-  S.err = "";
-  renderSetup();
+    S.draft = "";
+    S.err = "";
+    saveState();
+    renderSetup();
   $("newName").focus();
 }
 
 function removePlayer(i) {
   S.players.splice(i, 1);
+    saveState();
   S.err = "";
   renderSetup();
 }
 
 /* ---------- Round start ---------- */
 function pickPair() {
-  const list = getPacks()[S.pack];
-  if (!S.used[S.pack]) S.used[S.pack] = [];
-  let avail = list.filter(p => !S.used[S.pack].includes(p[0] + "|" + p[1]));
-  if (!avail.length) { S.used[S.pack] = []; avail = list; }
-  const pair = avail[Math.floor(Math.random() * avail.length)];
-  S.used[S.pack].push(pair[0] + "|" + pair[1]);
+  var list = getPacks()[S.pack] || [];
+  var used = S.usedWords;
+  var avail = list.filter(function (p) { return !used[wkey(p[0])] && !used[wkey(p[1])]; });
+  if (!avail.length) {
+    // every pair in this pack has been played: only now start this pack over
+    list.forEach(function (p) { delete used[wkey(p[0])]; delete used[wkey(p[1])]; });
+    avail = list.slice();
+    toast("Is pack ke saare words ho chuke the, ab dobara shuru.");
+  }
+  var pair = avail[Math.floor(Math.random() * avail.length)];
+  used[wkey(pair[0])] = 1;
+  used[wkey(pair[1])] = 1;
+  saveState();
   return pair;
 }
 
 function startRound() {
   if (S.players.length < 3) return;
   S.err = "";
-  const pair = pickPair();
+  clearRound();
+    const pair = pickPair();
   const flip = Math.random() < 0.5;
   const civWord = flip ? pair[1] : pair[0];
   const spyTwin = flip ? pair[0] : pair[1];
@@ -326,7 +673,8 @@ function startRound() {
   });
   S.revealIdx = 0;
   S.round++;
-  renderReveal();
+    saveState();
+    renderReveal();
 }
 
 /* ---------- Secret reveal (hold to see) ---------- */
@@ -334,7 +682,8 @@ function renderReveal() {
   S.screen = "reveal";
   const p = S.roster[S.revealIdx];
   app.innerHTML = `
-    <p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p>
+    <div class="prog">${S.roster.map((_, k) => `<i class="${k <= S.revealIdx ? "on" : ""}"></i>`).join("")}</div>
+        <p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p>
     <h1>${esc(p.name)}</h1>
     <p class="sub">Phone sirf inhe do. Baaki log aankh band karein ya dusri taraf dekhein.</p>
     <div id="roleBox" class="hold"
@@ -370,21 +719,27 @@ function nextReveal() {
 /* ---------- Discussion timer ---------- */
 function renderDiscussion(keep) {
   S.screen = "discussion";
-  if (!keep) S.timerLeft = S.discussionMin * 60;
-  else if (S.timerLeft <= 0) S.timerLeft = 60;
+  if (!keep) {
+    S.timerLeft = S.discussionMin * 60;
+    var al = alive();
+    S.starter = al.length ? al[Math.floor(Math.random() * al.length)].name : "";
+  } else if (S.timerLeft <= 0) {
+    S.timerLeft = 60;
+  }
   S.paused = false;
+  saveRound("discussion");
 
   app.innerHTML = `
-    <p class="sub">Round ${S.round}. Ek-ek sawal poochho.</p>
+    <p class="sub">Round ${S.round} · ${alive().length} player bache hain</p>
     <h1>Discussion</h1>
-    <p class="sub">Sawal aisa rakho jo sirf word jaanne wale ka jawab de sake.</p>
-    <div class="big" id="clock">${fmt(S.timerLeft)}</div>
+    <p class="sub">Sawal aisa rakho jo sirf word jaanne wale ka jawab de sake.${S.starter ? " Shuruwat: <b>" + esc(S.starter) + "</b>." : ""}</p>
+    <div class="big${S.timerLeft <= 30 ? " low" : ""}" id="clock">${fmt(S.timerLeft)}</div>
     <div class="row">
       <button id="pauseBtn" onclick="togglePause()">Pause</button>
       <button class="primary" onclick="goVote()">Vote karo</button>
     </div>
     <div class="panel">
-      <ul class="players">${alive().map(p => `<li><span>${esc(p.name)}</span></li>`).join("")}</ul>
+      <ul class="players">${alive().map(p => `<li><span class="pn"><i class="av">${ini(p.name)}</i>${esc(p.name)}</span></li>`).join("")}</ul>
     </div>
   `;
   startTimer();
@@ -392,21 +747,35 @@ function renderDiscussion(keep) {
 
 function startTimer() {
   clearInterval(S.timerId);
-  S.timerId = setInterval(() => {
-    if (S.paused || S.screen !== "discussion") return;
-    S.timerLeft--;
-    const c = $("clock");
-    if (c) c.textContent = fmt(Math.max(0, S.timerLeft));
-    if (S.timerLeft <= 0) {
-      clearInterval(S.timerId);
-      goVote();
-    }
-  }, 1000);
+  S.deadline = Date.now() + S.timerLeft * 1000;   // wall-clock based, so screen lock cannot freeze it
+  S.timerId = setInterval(tick, 500);
+}
+
+function tick() {
+  if (S.screen !== "discussion") { clearInterval(S.timerId); return; }
+  if (S.paused) return;
+  S.timerLeft = Math.max(0, Math.ceil((S.deadline - Date.now()) / 1000));
+  var c = $("clock");
+  if (c) {
+    c.textContent = fmt(S.timerLeft);
+    c.classList.toggle("low", S.timerLeft <= 30);
+  }
+  if (S.timerLeft <= 0) {
+    clearInterval(S.timerId);
+    goVote();
+  } else if (S.timerLeft % 5 === 0) {
+    saveRound("discussion");
+  }
 }
 
 function togglePause() {
-  S.paused = !S.paused;
-  $("pauseBtn").textContent = S.paused ? "Resume" : "Pause";
+  if (!S.paused) { tick(); S.paused = true; }
+  else { S.paused = false; S.deadline = Date.now() + S.timerLeft * 1000; }
+  var b = $("pauseBtn");
+  if (b) b.textContent = S.paused ? "Resume" : "Pause";
+  var c = $("clock");
+  if (c) c.classList.toggle("paused", S.paused);
+  saveRound("discussion");
 }
 
 /* ---------- Voting ---------- */
@@ -417,21 +786,47 @@ function goVote() {
 
 function renderVote() {
   S.screen = "vote";
-  const buttons = S.roster
-    .map((p, i) => ({ p, i }))
-    .filter(x => x.p.alive)
-    .map(x => `<button onclick="eliminate(${x.i})">${esc(x.p.name)}</button>`)
+  S.voteSel = -1;
+  saveRound("vote");
+  var buttons = S.roster
+    .map(function (p, i) { return { p: p, i: i }; })
+    .filter(function (x) { return x.p.alive; })
+    .map(function (x) {
+      return `<button class="vb" id="vb${x.i}" onclick="pickVote(${x.i})"><i class="av">${ini(x.p.name)}</i>${esc(x.p.name)}</button>`;
+    })
     .join("");
   app.innerHTML = `
     <h1>Vote</h1>
-    <p class="sub">Group mein faisla karo. Jiske against vote hua, uspar tap karo.</p>
+    <p class="sub">Group mein faisla karo, phir jiske against vote hua use chuno.</p>
     <div class="votes">${buttons}</div>
-    <button class="ghost" onclick="renderDiscussion(true)">Barabar vote, discussion wapas</button>
+    <button class="primary" id="confirmVote" disabled onclick="confirmVote()">Pehle kisi ko chuno</button>
+    <button class="ghost wide" onclick="renderDiscussion(true)">Barabar vote, discussion wapas</button>
   `;
 }
 
+function pickVote(i) {
+  if (S.screen !== "vote") return;
+  S.voteSel = i;
+  S.roster.forEach(function (p, k) {
+    var b = $("vb" + k);
+    if (b) b.classList.toggle("sel", k === i);
+  });
+  var c = $("confirmVote");
+  if (c) {
+    c.disabled = false;
+    c.textContent = S.roster[i].name + " ko bahar karo";
+  }
+}
+
+function confirmVote() {
+  if (S.screen !== "vote" || S.voteSel < 0) return;
+  eliminate(S.voteSel);
+}
+
 function eliminate(i) {
+  if (S.screen !== "vote") return;
   const p = S.roster[i];
+  if (!p || !p.alive) return;
   p.alive = false;
 
   // Last spy caught: spy gets one chance to guess the civilian word.
@@ -447,12 +842,13 @@ function eliminate(i) {
 
 function renderOut(p) {
   S.screen = "out";
+  saveRound("out");
   app.innerHTML = `
     <p class="sub">Vote ka faisla</p>
     <h1>${esc(p.name)} bahar</h1>
     <span class="tag ${p.role === "spy" ? "spy" : ""}">${p.role === "spy" ? "Ye SPY tha" : "Ye civilian tha"}</span>
     <p class="sub">Khel chal raha hai. Dhyaan rakho, spy abhi bhi group mein hai.</p>
-    <button class="primary" onclick="renderDiscussion(true)">Discussion jaari rakho</button>
+    <button class="primary" onclick="renderDiscussion(false)">Discussion jaari rakho</button>
   `;
 }
 
@@ -460,7 +856,7 @@ function renderOut(p) {
 function renderGuess(p) {
   S.screen = "guess";
   // Unique words only: the packs share some words, so the decoy pool must be deduplicated.
-  const everyWord = [...new Set(Object.values(getPacks()).flat(2))];
+  const everyWord = [...new Set((getPacks()[S.pack] || []).flat())];
   const pool = shuffle(everyWord.filter(w => w !== S.civWord && w !== S.spyWordText));
   S.guessOpts = shuffle([S.civWord, ...pool.slice(0, 3)]);
   app.innerHTML = `
@@ -474,6 +870,7 @@ function renderGuess(p) {
 }
 
 function guessAnswer(i) {
+  if (S.screen !== "guess") return;
   if (S.guessOpts[i] === S.civWord) {
     endRound("spy", "Spy ne civilian ka word sahi guess kar liya.");
   } else {
@@ -483,14 +880,17 @@ function guessAnswer(i) {
 
 /* ---------- Round end and scoring ---------- */
 function endRound(winner, reason) {
+  if (S.screen === "result") return;
   clearInterval(S.timerId);
   S.screen = "result";
+  clearRound();
   const winners = S.roster.filter(p => winner === "spy" ? p.role === "spy" : p.role === "civ");
   winners.forEach(p => {
     S.scores[p.name] = (S.scores[p.name] || 0) + (winner === "spy" ? 3 : 2);
   });
 
-  const spyNames = S.roster.filter(p => p.role === "spy").map(p => esc(p.name)).join(", ");
+  saveState();
+    const spyNames = S.roster.filter(p => p.role === "spy").map(p => esc(p.name)).join(", ");
   const scoreRows = S.players.map(p =>
     `<li><span>${esc(p)}</span><span class="score">${S.scores[p] || 0}</span></li>`).join("");
 
@@ -512,6 +912,27 @@ function endRound(winner, reason) {
   `;
 }
 
+var _lastScr = "";
+new MutationObserver(function () {
+  if (S.screen === "setup" && _lastScr === "setup") return;
+  _lastScr = S.screen;
+  app.classList.remove("in");
+  void app.offsetWidth;
+  app.classList.add("in");
+}).observe(app, { childList: true });
+
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "visible") {
+    if (S.screen === "discussion") tick();
+  } else {
+    saveState();
+    if (S.screen === "discussion" || S.screen === "vote" || S.screen === "out") saveRound(S.screen);
+  }
+});
+window.addEventListener("pagehide", saveState);
+
+loadState();
+S.resume = loadRoundSaved();
 renderSetup();
 </script>
 </body>
