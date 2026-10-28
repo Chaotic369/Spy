@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spy</title>
+<style>
+:root{
+  --bg:#0d0d0f; --ink:#e8e2d4; --muted:#8a8478; --line:#2a2827;
+  --brass:#b8925a; --blood:#8e2a2a; --card:#16151a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;}
+body{padding:env(safe-area-inset-top,0px) 16px env(safe-area-inset-bottom,0px)}
+#app{max-width:460px;margin:0 auto;padding:28px 0 60px;min-height:100vh}
+h1{font-weight:400;font-size:36px;letter-spacing:.01em;margin:0 0 6px}
+.sub{color:var(--muted);font-size:15px;margin:0 0 22px;font-style:italic;line-height:1.5}
+.panel{border-top:1px solid var(--line);padding:16px 0}
+label{display:block;font-size:14px;color:var(--muted);margin:14px 0 6px}
+input,select{width:100%;background:transparent;border:1px solid var(--line);color:var(--ink);
+  padding:12px;font:inherit;font-size:16px;border-radius:2px}
+select option{background:#16151a}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+button{font:inherit;cursor:pointer;background:transparent;color:var(--ink);
+  border:1px solid var(--brass);padding:13px 18px;border-radius:2px;font-size:16px;
+  width:100%;margin-top:10px}
+button.primary{background:var(--brass);color:#120f0a}
+button.ghost{border-color:var(--line);color:var(--muted);width:auto;padding:8px 12px;font-size:14px;margin:0}
+button:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1}
+ul.players{list-style:none;padding:0;margin:10px 0}
+ul.players li{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--line)}
+.hold{user-select:none;-webkit-user-select:none;touch-action:none;background:var(--card);
+  border:1px solid var(--brass);padding:56px 20px;text-align:center;font-size:18px;
+  margin:18px 0 6px;min-height:180px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;color:var(--muted)}
+.word{font-size:34px;color:var(--brass);margin:12px 0}
+.big{font-size:64px;text-align:center;margin:28px 0 10px;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-size:13px;color:var(--muted);border:1px solid var(--line);
+  padding:3px 8px;border-radius:2px;margin-bottom:6px}
+.tag.spy{color:#d98a8a;border-color:var(--blood)}
+.votes{display:grid;gap:8px;margin-top:12px}
+.votes button{margin-top:0}
+.score{color:var(--muted)}
+.err{color:#d98a8a;font-size:14px;margin:8px 0 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ---------- Aasaan packs: [civilian word, similar word for undercover] ---------- */
+const PACKS_EASY = {
+  "Khana (Food)": [
+    ["Samosa","Kachori"],["Pizza","Burger"],["Chai","Coffee"],["Dosa","Uttapam"],
+    ["Gulab jamun","Rasgulla"],["Momos","Dumplings"],["Biryani","Pulao"],["Paneer tikka","Chicken tikka"],
+    ["Chole bhature","Rajma chawal"],["Pav bhaji","Misal pav"],["Vada pav","Bread pakoda"],["Idli","Dhokla"],
+    ["Jalebi","Imarti"],["Chowmein","Hakka noodles"],["Sandwich","Wrap"],["Ice cream","Kulfi"],
+    ["Lassi","Chaas"],["Maggi","Pasta"],["Poha","Upma"],["Paratha","Naan"],
+    ["Dal","Kadhi"],["Cake","Pastry"],["Golgappa","Dahi puri"],["Kheer","Halwa"],
+    ["Chips","Kurkure"],["Pakora","Bhajiya"],["Cold drink","Juice"],["Fried rice","Schezwan rice"],
+    ["Dahi bhalla","Dahi vada"],["Tandoori roti","Chapati"]
+  ],
+  "Jagah (Places)": [
+    ["Railway station","Bus stand"],["Airport","Bus terminal"],["Library","Bookshop"],
+    ["Cinema","Theatre"],["Beach","Swimming pool"],["Hill station","Village"],
+    ["Mall","Market"],["Stadium","Gym"],["School","College"],["Hospital","Clinic"],
+    ["Park","Garden"],["Office","Bank"],["Zoo","Safari park"],["Jungle","Forest"],
+    ["Desert","Snowfield"],["Kitchen","Restaurant"],["Rooftop","Terrace"],["Bridge","Flyover"],
+    ["Lake","Pond"],["Metro station","Bus stop"],["Hostel","Guest house"],["Police station","Court"],
+    ["Farm","Dairy"],["Cricket ground","Football ground"],["Wedding hall","Banquet hall"],
+    ["Dhaba","Canteen"],["Ghat","Riverbank"],["Temple","Museum"]
+  ],
+  "Film (Bollywood)": [
+    ["Sholay","Deewar"],["Lagaan","Swades"],["Dangal","Sultan"],["Golmaal","Hera Pheri"],
+    ["Taare Zameen Par","Iqbal"],["Pathaan","War"],["3 Idiots","Chhichhore"],["Dabangg","Singham"],
+    ["Gully Boy","Rockstar"],["Queen","Tanu Weds Manu"],["Dil Chahta Hai","Zindagi Na Milegi Dobara"],
+    ["Kal Ho Naa Ho","Kuch Kuch Hota Hai"],["Andaz Apna Apna","Chupke Chupke"],["Kabir Singh","Devdas"],
+    ["Bajirao Mastani","Padmaavat"],["Drishyam","Kahaani"],["Mughal-e-Azam","Umrao Jaan"],
+    ["Jab We Met","Rab Ne Bana Di Jodi"],["Munna Bhai MBBS","Lage Raho Munna Bhai"],["Dhoom","Race"],
+    ["Bhaag Milkha Bhaag","Mary Kom"],["Baahubali","Eega"],["Kantara","KGF"],["Stree","Bhool Bhulaiyaa"],
+    ["Sanju","Mardaani"],["Rang De Basanti","Lakshya"],["Hum Aapke Hain Koun","Vivah"],["Gadar","Border"]
+  ],
+  "Cheezein (Objects)": [
+    ["Umbrella","Raincoat"],["Keyboard","Piano"],["Mobile phone","Walkie-talkie"],["Torch","Lantern"],
+    ["Spectacles","Sunglasses"],["Calculator","Abacus"],["Pen","Pencil"],["Bicycle","Scooter"],
+    ["Mirror","Glass window"],["Bucket","Mug"],["Chair","Stool"],["Pillow","Cushion"],
+    ["Blanket","Bedsheet"],["Toothbrush","Comb"],["Clock","Watch"],["Fan","Cooler"],
+    ["Socks","Gloves"],["Suitcase","Backpack"],["Wallet","Purse"],["Helmet","Cap"],
+    ["Slippers","Sandals"],["Soap","Shampoo"],["Book","Notebook"],["Camera","Binoculars"],
+    ["Table","Desk"],["Ladder","Stairs"],["Broom","Mop"],["Rope","Thread"]
+  ],
+  "Janwar (Animals)": [
+    ["Lion","Tiger"],["Elephant","Rhino"],["Cat","Leopard"],["Dog","Wolf"],
+    ["Horse","Donkey"],["Crow","Pigeon"],["Parrot","Myna"],["Snake","Lizard"],
+    ["Monkey","Gorilla"],["Cow","Buffalo"],["Camel","Llama"],["Fox","Jackal"],
+    ["Owl","Eagle"],["Dolphin","Shark"],["Frog","Toad"],["Bee","Wasp"],
+    ["Goat","Sheep"],["Deer","Antelope"],["Peacock","Hen"],["Penguin","Duck"],
+    ["Kangaroo","Wallaby"],["Mouse","Rat"],["Ant","Termite"],["Hippo","Crocodile"],
+    ["Giraffe","Zebra"],["Squirrel","Chipmunk"]
+  ]
+};
+
+/* ---------- Mushkil packs: harder, less common words ---------- */
+const PACKS_HARD = {
+  "Khana (Food)": [
+    ["Rasmalai","Sandesh"],["Khichdi","Pongal"],["Pesarattu","Appam"],["Litti chokha","Thepla"],
+    ["Dhokla","Khaman"],["Kachori","Mathri"],["Sev puri","Bhel puri"],["Shami kebab","Galouti kebab"],
+    ["Haleem","Harissa"],["Tahini","Hummus"],["Sushi","Sashimi"],["Ramen","Udon"],
+    ["Tiramisu","Panna cotta"],["Baklava","Kunafa"],["Gazpacho","Minestrone"],["Ratatouille","Moussaka"],
+    ["Falooda","Phirni"],["Sookha aloo","Aloo gobi"],["Malpua","Chhena poda"],["Shahi tukda","Double ka meetha"],
+    ["Bhapa doi","Mishti doi"],["Rogan josh","Korma"],["Kadai paneer","Matar paneer"],["Aam panna","Mango lassi"],
+    ["Sattu sherbet","Jaljeera"],["Keema pav","Kheema naan"],["Sambhar","Rasam"],["Appam","Puttu"],
+    ["Bharwa karela","Bhindi masala"]
+  ],
+  "Jagah (Places)": [
+    ["Mausoleum","Monastery"],["Ashram","Gurudwara"],["Observatory","Planetarium"],["Lighthouse","Watchtower"],
+    ["Dockyard","Shipyard"],["Hangar","Warehouse"],["Quarry","Mine"],["Laboratory","Workshop"],
+    ["Amphitheatre","Stadium"],["Aquarium","Oceanarium"],["Sanatorium","Clinic"],["Caravanserai","Inn"],
+    ["Crematorium","Cemetery"],["Citadel","Fortress"],["Viaduct","Aqueduct"],["Estuary","Delta"],
+    ["Plateau","Mesa"],["Glacier","Iceberg"],["Oasis","Mirage"],["Vineyard","Orchard"],
+    ["Tea estate","Coffee plantation"],["Courthouse","Parliament"],["Embassy","Consulate"],["Tram stop","Monorail station"],
+    ["Mezzanine","Balcony"],["Cloister","Hermitage"],["Greenhouse","Nursery"],["Pilgrimage site","Tourist spot"]
+  ],
+  "Film (Bollywood)": [
+    ["Mughal-e-Azam","Jodhaa Akbar"],["Pakeezah","Mere Mehboob"],["Guide","Abhimaan"],["Mother India","Gunga Jumna"],
+    ["Amar Akbar Anthony","Coolie"],["Kaagaz Ke Phool","Pyaasa"],["Anand","Guddi"],["Nayak","Dostana"],
+    ["Maqbool","Omkara"],["Rockstar","Barfi"],["Vicky Donor","Shuddh Desi Romance"],["Haider","Raman Raghav"],
+    ["Ankur","Manthan"],["Masoom","Arth"],["Mirch Masala","Ardh Satya"],["Newton","Court"],
+    ["Article 15","Tanvi the Great"],["Lunchbox","Piku"],["Tumbbad","Pari"],["Gangubai Kathiawadi","Raazi"],
+    ["Super 30","Chak De India"],["Udaan","Jhalki"],["Kai Po Che","Taare Zameen Par"],["Shahid","Aligarh"],
+    ["Black Friday","Kaante"],["Hungama","Bhagam Bhag"],["Vaastav","Satya"],["Kahaani","Drishyam"]
+  ],
+  "Cheezein (Objects)": [
+    ["Stethoscope","Thermometer"],["Compass","Protractor"],["Hourglass","Sundial"],["Sextant","Astrolabe"],
+    ["Gramophone","Radio"],["Typewriter","Printer"],["Chisel","Hammer"],["Anvil","Hammer"],
+    ["Tongs","Pliers"],["Stapler","Clip"],["Ledger","Diary"],["Quill","Fountain pen"],
+    ["Kettle","Samovar"],["Pestle","Mortar"],["Sieve","Colander"],["Rolling pin","Spatula"],
+    ["Tweezers","Scissors"],["Magnifying glass","Telescope"],["Harmonium","Accordion"],["Sitar","Veena"],
+    ["Tabla","Mridangam"],["Dholak","Bongo"],["Saxophone","Clarinet"],["Violin","Cello"],
+    ["Parachute","Hot air balloon"],["Anchor","Harpoon"],["Pickaxe","Shovel"],["Lantern","Lamp"]
+  ],
+  "Janwar (Animals)": [
+    ["Okapi","Giraffe"],["Pangolin","Armadillo"],["Platypus","Otter"],["Wombat","Badger"],
+    ["Mongoose","Weasel"],["Hyena","Dingo"],["Gazelle","Impala"],["Manatee","Dugong"],
+    ["Tapir","Anteater"],["Lemur","Loris"],["Chameleon","Gecko"],["Komodo dragon","Iguana"],
+    ["Cobra","Python"],["Scorpion","Spider"],["Mantis","Grasshopper"],["Dragonfly","Damselfly"],
+    ["Nightingale","Cuckoo"],["Flamingo","Stork"],["Pelican","Heron"],["Kingfisher","Bee-eater"],
+    ["Hornbill","Toucan"],["Ostrich","Emu"],["Vulture","Kite"],["Sloth","Koala"],
+    ["Hedgehog","Porcupine"],["Beaver","Otter"],["Seal","Walrus"],["Jackal","Fox"]
+  ]
+};
+
+function getPacks() {
+  return S.level === "mushkil" ? PACKS_HARD : PACKS_EASY;
+}
+
+/* ---------- State ---------- */
+const S = {
+  screen: "setup",
+  players: ["Gourav", "Dost 2", "Dost 3"],
+  level: "aasaan",
+  pack: Object.keys(PACKS_EASY)[0],
+  spyCount: 1,
+  spyWord: "twin",          // "twin" = Undercover (spy gets similar word), "none" = Classic
+  discussionMin: 5,
+  used: {},                 // pack name -> pairs already played
+  scores: {},               // name -> points
+  round: 0,
+  roster: [],               // {name, role: "civ"|"spy", word, alive}
+  civWord: "",
+  spyWordText: null,
+  revealIdx: 0,
+  timerLeft: 0,
+  timerId: null,
+  paused: false,
+  guessOpts: [],
+  err: ""
+};
+
+const app = document.getElementById("app");
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const shuffle = arr => {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+const fmt = s => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+const alive = () => S.roster.filter(p => p.alive);
+const spiesAlive = () => S.roster.filter(p => p.role === "spy" && p.alive).length;
+const civsAlive = () => S.roster.filter(p => p.role === "civ" && p.alive).length;
+
+/* ---------- Setup ---------- */
+function renderSetup() {
+  S.screen = "setup";
+  clearInterval(S.timerId);
+  const n = S.players.length;
+  const maxSpy = Math.max(1, Math.floor((n - 1) / 2));   // spies must stay fewer than civilians
+  S.spyCount = Math.min(S.spyCount, maxSpy);
+
+  const list = S.players.map((p, i) =>
+    `<li><span>${esc(p)}</span><button class="ghost" onclick="removePlayer(${i})">hatao</button></li>`
+  ).join("");
+
+  const packOpts = Object.keys(getPacks()).map(k =>
+    `<option ${k === S.pack ? "selected" : ""}>${esc(k)}</option>`).join("");
+
+  const spyOpts = [1, 2, 3].filter(x => x <= maxSpy).map(x =>
+    `<option value="${x}" ${x === S.spyCount ? "selected" : ""}>${x}</option>`).join("");
+
+  const timerOpts = [3, 5, 8].map(m =>
+    `<option value="${m}" ${m === S.discussionMin ? "selected" : ""}>${m} minute</option>`).join("");
+
+  const scoreRows = S.players.map(p =>
+    `<li><span>${esc(p)}</span><span class="score">${S.scores[p] || 0}</span></li>`).join("");
+
+  app.innerHTML = `
+    <h1>Spy</h1>
+    <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
+
+    <div class="panel">
+      <label>Players (3 se 10)</label>
+      <ul class="players">${list}</ul>
+      <form class="row" onsubmit="addPlayer(event)">
+        <input id="newName" maxlength="16" placeholder="Naam likho" autocomplete="off" enterkeyhint="done">
+        <button type="submit" class="ghost" style="padding:12px 16px" ${n >= 10 ? "disabled" : ""}>Add</button>
+      </form>
+      ${S.err ? `<p class="err">${esc(S.err)}</p>` : ""}
+    </div>
+
+    <div class="panel">
+      <label>Kitne mushkil words?</label>
+      <select onchange="S.level=this.value">
+        <option value="aasaan" ${S.level === "aasaan" ? "selected" : ""}>Aasaan</option>
+        <option value="mushkil" ${S.level === "mushkil" ? "selected" : ""}>Mushkil</option>
+      </select>
+
+      <label>Word pack</label>
+      <select onchange="S.pack=this.value">${packOpts}</select>
+
+      <label>Spy kitne honge?</label>
+      <select onchange="S.spyCount=+this.value">${spyOpts}</select>
+
+      <label>Spy ko word kaisa milega?</label>
+      <select onchange="S.spyWord=this.value">
+        <option value="twin" ${S.spyWord === "twin" ? "selected" : ""}>Milta-julta word (Undercover)</option>
+        <option value="none" ${S.spyWord === "none" ? "selected" : ""}>Kuch nahi (Classic)</option>
+      </select>
+
+      <label>Discussion ka timer</label>
+      <select onchange="S.discussionMin=+this.value">${timerOpts}</select>
+    </div>
+
+    <div class="panel">
+      ${n < 3 ? `<p class="err">Kam se kam 3 players chahiye. Naya add karo.</p>` : ""}
+      <button class="primary" onclick="startRound()" ${n < 3 ? "disabled" : ""}>Khel shuru karo</button>
+    </div>
+
+    ${Object.keys(S.scores).length ? `
+      <div class="panel">
+        <label>Scoreboard</label>
+        <ul class="players">${scoreRows}</ul>
+      </div>` : ""}
+  `;
+}
+
+function addPlayer(e) {
+  if (e) e.preventDefault();
+  const v = $("newName").value.trim().slice(0, 16);
+  if (!v) return;
+  if (S.players.some(p => p.toLowerCase() === v.toLowerCase())) {
+    S.err = "Ye naam pehle se hai.";
+    return renderSetup();
+  }
+  if (S.players.length >= 10) return;
+  S.players.push(v);
+  S.err = "";
+  renderSetup();
+  $("newName").focus();
+}
+
+function removePlayer(i) {
+  S.players.splice(i, 1);
+  S.err = "";
+  renderSetup();
+}
+
+/* ---------- Round start ---------- */
+function pickPair() {
+  const list = getPacks()[S.pack];
+  if (!S.used[S.pack]) S.used[S.pack] = [];
+  let avail = list.filter(p => !S.used[S.pack].includes(p[0] + "|" + p[1]));
+  if (!avail.length) { S.used[S.pack] = []; avail = list; }
+  const pair = avail[Math.floor(Math.random() * avail.length)];
+  S.used[S.pack].push(pair[0] + "|" + pair[1]);
+  return pair;
+}
+
+function startRound() {
+  if (S.players.length < 3) return;
+  S.err = "";
+  const pair = pickPair();
+  const flip = Math.random() < 0.5;
+  const civWord = flip ? pair[1] : pair[0];
+  const spyTwin = flip ? pair[0] : pair[1];
+  const spyNames = new Set(shuffle(S.players).slice(0, S.spyCount));
+
+  S.civWord = civWord;
+  S.spyWordText = S.spyWord === "twin" ? spyTwin : null;
+  S.roster = S.players.map(name => {
+    const isSpy = spyNames.has(name);
+    return {
+      name,
+      role: isSpy ? "spy" : "civ",
+      word: isSpy ? S.spyWordText : civWord,
+      alive: true
+    };
+  });
+  S.revealIdx = 0;
+  S.round++;
+  renderReveal();
+}
+
+/* ---------- Secret reveal (hold to see) ---------- */
+function renderReveal() {
+  S.screen = "reveal";
+  const p = S.roster[S.revealIdx];
+  app.innerHTML = `
+    <p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p>
+    <h1>${esc(p.name)}</h1>
+    <p class="sub">Phone sirf inhe do. Baaki log aankh band karein ya dusri taraf dekhein.</p>
+    <div id="roleBox" class="hold"
+      onpointerdown="showRole(${S.revealIdx})"
+      onpointerup="hideRole()" onpointerleave="hideRole()" onpointercancel="hideRole()"
+      oncontextmenu="return false">Dabaye rakho, dekhne ke liye</div>
+    <button class="primary" id="nextBtn" disabled onclick="nextReveal()">Ho gaya, agla player</button>
+  `;
+}
+
+function showRole(i) {
+  const p = S.roster[i];
+  $("nextBtn").disabled = false;
+  const box = $("roleBox");
+  if (p.role === "spy" && !p.word) {
+    box.innerHTML = `<div class="tag spy">Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
+  } else {
+    box.innerHTML = `<div class="tag">Tumhara word</div><div class="word">${esc(p.word)}</div>`;
+  }
+}
+
+function hideRole() {
+  const box = $("roleBox");
+  if (box) box.innerHTML = "Dabaye rakho, dekhne ke liye";
+}
+
+function nextReveal() {
+  S.revealIdx++;
+  if (S.revealIdx >= S.roster.length) return renderDiscussion(false);
+  renderReveal();
+}
+
+/* ---------- Discussion timer ---------- */
+function renderDiscussion(keep) {
+  S.screen = "discussion";
+  if (!keep) S.timerLeft = S.discussionMin * 60;
+  else if (S.timerLeft <= 0) S.timerLeft = 60;
+  S.paused = false;
+
+  app.innerHTML = `
+    <p class="sub">Round ${S.round}. Ek-ek sawal poochho.</p>
+    <h1>Discussion</h1>
+    <p class="sub">Sawal aisa rakho jo sirf word jaanne wale ka jawab de sake.</p>
+    <div class="big" id="clock">${fmt(S.timerLeft)}</div>
+    <div class="row">
+      <button id="pauseBtn" onclick="togglePause()">Pause</button>
+      <button class="primary" onclick="goVote()">Vote karo</button>
+    </div>
+    <div class="panel">
+      <ul class="players">${alive().map(p => `<li><span>${esc(p.name)}</span></li>`).join("")}</ul>
+    </div>
+  `;
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(S.timerId);
+  S.timerId = setInterval(() => {
+    if (S.paused || S.screen !== "discussion") return;
+    S.timerLeft--;
+    const c = $("clock");
+    if (c) c.textContent = fmt(Math.max(0, S.timerLeft));
+    if (S.timerLeft <= 0) {
+      clearInterval(S.timerId);
+      goVote();
+    }
+  }, 1000);
+}
+
+function togglePause() {
+  S.paused = !S.paused;
+  $("pauseBtn").textContent = S.paused ? "Resume" : "Pause";
+}
+
+/* ---------- Voting ---------- */
+function goVote() {
+  clearInterval(S.timerId);
+  renderVote();
+}
+
+function renderVote() {
+  S.screen = "vote";
+  const buttons = S.roster
+    .map((p, i) => ({ p, i }))
+    .filter(x => x.p.alive)
+    .map(x => `<button onclick="eliminate(${x.i})">${esc(x.p.name)}</button>`)
+    .join("");
+  app.innerHTML = `
+    <h1>Vote</h1>
+    <p class="sub">Group mein faisla karo. Jiske against vote hua, uspar tap karo.</p>
+    <div class="votes">${buttons}</div>
+    <button class="ghost" onclick="renderDiscussion(true)">Barabar vote, discussion wapas</button>
+  `;
+}
+
+function eliminate(i) {
+  const p = S.roster[i];
+  p.alive = false;
+
+  // Last spy caught: spy gets one chance to guess the civilian word.
+  if (p.role === "spy" && spiesAlive() === 0) return renderGuess(p);
+
+  // Spies equal or outnumber civilians: spies win.
+  if (spiesAlive() >= civsAlive()) {
+    return endRound("spy", `${p.name} nikla gaya, aur ab spies barabar ya zyada hain.`);
+  }
+
+  renderOut(p);
+}
+
+function renderOut(p) {
+  S.screen = "out";
+  app.innerHTML = `
+    <p class="sub">Vote ka faisla</p>
+    <h1>${esc(p.name)} bahar</h1>
+    <span class="tag ${p.role === "spy" ? "spy" : ""}">${p.role === "spy" ? "Ye SPY tha" : "Ye civilian tha"}</span>
+    <p class="sub">Khel chal raha hai. Dhyaan rakho, spy abhi bhi group mein hai.</p>
+    <button class="primary" onclick="renderDiscussion(true)">Discussion jaari rakho</button>
+  `;
+}
+
+/* ---------- Spy's last chance ---------- */
+function renderGuess(p) {
+  S.screen = "guess";
+  // Unique words only: the packs share some words, so the decoy pool must be deduplicated.
+  const everyWord = [...new Set(Object.values(getPacks()).flat(2))];
+  const pool = shuffle(everyWord.filter(w => w !== S.civWord && w !== S.spyWordText));
+  S.guessOpts = shuffle([S.civWord, ...pool.slice(0, 3)]);
+  app.innerHTML = `
+    <p class="sub">Aakhri mauka</p>
+    <h1>${esc(p.name)} spy tha</h1>
+    <p class="sub">Civilian ka word sahi guess kiya to spies jeet jaayenge.</p>
+    <div class="votes">
+      ${S.guessOpts.map((w, i) => `<button onclick="guessAnswer(${i})">${esc(w)}</button>`).join("")}
+    </div>
+  `;
+}
+
+function guessAnswer(i) {
+  if (S.guessOpts[i] === S.civWord) {
+    endRound("spy", "Spy ne civilian ka word sahi guess kar liya.");
+  } else {
+    endRound("civ", "Spy ka guess galat nikla. Civilians jeet gaye.");
+  }
+}
+
+/* ---------- Round end and scoring ---------- */
+function endRound(winner, reason) {
+  clearInterval(S.timerId);
+  S.screen = "result";
+  const winners = S.roster.filter(p => winner === "spy" ? p.role === "spy" : p.role === "civ");
+  winners.forEach(p => {
+    S.scores[p.name] = (S.scores[p.name] || 0) + (winner === "spy" ? 3 : 2);
+  });
+
+  const spyNames = S.roster.filter(p => p.role === "spy").map(p => esc(p.name)).join(", ");
+  const scoreRows = S.players.map(p =>
+    `<li><span>${esc(p)}</span><span class="score">${S.scores[p] || 0}</span></li>`).join("");
+
+  app.innerHTML = `
+    <p class="sub">Round ${S.round} khatam</p>
+    <h1>${winner === "spy" ? "Spies jeet gaye" : "Civilians jeet gaye"}</h1>
+    <p class="sub">${esc(reason)}</p>
+    <div class="panel">
+      <p>Civilian ka word: <span class="word" style="font-size:22px">${esc(S.civWord)}</span></p>
+      <p>Spy: ${spyNames}</p>
+      <p>Spy ka word: ${S.spyWordText ? `<span class="word" style="font-size:22px">${esc(S.spyWordText)}</span>` : "koi nahi (Classic)"}</p>
+    </div>
+    <div class="panel">
+      <label>Scoreboard</label>
+      <ul class="players">${scoreRows}</ul>
+    </div>
+    <button class="primary" onclick="startRound()">Agla round, same log</button>
+    <button onclick="renderSetup()">Setup par jao</button>
+  `;
+}
+
+renderSetup();
+</script>
+</body>
+</html>
