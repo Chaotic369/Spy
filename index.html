@@ -969,7 +969,20 @@ function beep(seq) {
       o.start(t + n.at);
       o.stop(t + n.at + n.d + 0.03);
     });
-  } catch (e
+  } catch (e) {}
+}
+function sndShow() {
+  beep([{ f: 440, to: 660, at: 0, d: 0.09, type: "triangle" }, { f: 660, to: 990, at: 0.07, d: 0.14, type: "triangle" }]);
+  try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
+}
+function sndHide() {
+  beep([{ f: 740, to: 520, at: 0, d: 0.08, type: "triangle" }, { f: 520, to: 300, at: 0.06, d: 0.13, type: "triangle" }]);
+}
+
+function showRole(i) {
+  _roleShown = true;
+  sndShow();
+  const p = S.roster[i];
   $("nextBtn").disabled = false;
   const box = $("roleBox");
   if (p.role === "spy" && !p.word) {
@@ -982,6 +995,7 @@ function beep(seq) {
 function hideRole() {
   const box = $("roleBox");
   if (box) box.innerHTML = ic("eye") + "Dabaye rakho, dekhne ke liye";
+    if (_roleShown) { _roleShown = false; sndHide(); }
 }
 
 function nextReveal() {
