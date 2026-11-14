@@ -500,6 +500,63 @@ button:active:not(:disabled) .ic{transform:scale(.9)}
 
           #sndBtn{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:46px;height:46px;padding:0;margin:0;z-index:30;border-radius:16px}
           #sndBtn .ic{width:22px;height:22px;margin:0}
+
+            /* ---- Performance + layout pass ---- */
+            *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+            button,.chip,.hold,#nextBtn,.votes button{touch-action:manipulation}
+            html{background:linear-gradient(160deg,#2a0d14 0%,#1a0b10 50%,#2b1208 100%)}
+            body::before{inset:0;animation:none!important;will-change:auto;background:radial-gradient(60% 40% at 15% 10%,rgba(255,110,30,.28) 0%,rgba(255,110,30,0) 70%),radial-gradient(55% 40% at 90% 90%,rgba(194,24,91,.26) 0%,rgba(194,24,91,0) 70%)}
+            body::after,#app::before,#app::after{display:none!important;animation:none!important}
+            h1 .ic,.hold .ic,button.primary::after,.badge{animation:none!important}
+            button.primary::after{display:none!important}
+            button.cta,.hold,.fp,.ul.players li,.av,.chip,.chip.on,.score,.tag,.tag.spy,.votes button,ul.players li{animation:none!important}
+            .hero h1.title{background:none;-webkit-text-fill-color:currentColor;color:#ffb04d;filter:none;text-shadow:0 3px 0 rgba(0,0,0,.45)}
+
+            #app{padding:56px 0 28px}
+            .panel,.panel.resume{background:linear-gradient(160deg,rgba(72,34,36,.92),rgba(44,20,24,.92));box-shadow:0 4px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.14);border-radius:22px;padding:16px;margin:12px 0}
+            .panel.resume{background:linear-gradient(160deg,rgba(120,66,20,.95),rgba(60,28,24,.95))}
+            button,.tag,.stat,.chip,ul.players li,.votes button.vb{box-shadow:0 3px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+            button{background:rgba(255,255,255,.1)}
+            button.primary,button.primary:active:not(:disabled){box-shadow:0 4px 0 #9c3a0a,inset 0 1px 0 rgba(255,255,255,.5)}
+            button:active:not(:disabled){box-shadow:0 1px 0 rgba(0,0,0,.4)}
+            .chip.on{box-shadow:0 3px 0 #9c3a0a,inset 0 1px 0 rgba(255,255,255,.5);transform:none}
+            input{background:rgba(0,0,0,.35)}
+            .hold{box-shadow:0 6px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2)}
+            .hold:active,.hold.open,.hold.spyview{box-shadow:0 2px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2)}
+            .votes button.vb.sel{box-shadow:0 3px 0 #6e1608,inset 0 1px 0 rgba(255,255,255,.4);transform:none}
+            .fp{position:relative;box-shadow:0 5px 0 #9c3a0a,inset 0 1px 0 rgba(255,255,255,.5)}
+            .fp::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,157,60,.4);z-index:0;pointer-events:none;animation:ringOut 2s ease-out infinite}
+            .fp .ic{position:relative;z-index:1}
+            @keyframes ringOut{from{transform:scale(1);opacity:.6}to{transform:scale(1.55);opacity:0}}
+            .big,.big.low{text-shadow:0 3px 0 rgba(0,0,0,.4)}
+
+            .hero{margin:0 0 14px}
+            .badge{width:72px;height:72px;margin:0 auto 10px;border-radius:24px;box-shadow:0 5px 0 #6e1608;transform:rotate(-6deg)}
+            .badge .ic{width:40px;height:40px}
+            .hero h1.title{font-size:44px}
+            .hero .sub{margin:6px 0 12px;font-size:14px}
+            label{margin:18px 0 8px}
+            .panel>label:first-child{margin-top:0}
+            .hint{margin:10px 0 0}
+            .chips{gap:8px}
+            .chip{padding:10px 14px}
+
+            ul.players{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+            ul.players li{margin:0;padding:8px 10px;min-width:0}
+            ul.players li.empty{grid-column:1/-1}
+            .pn{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+            .av{width:30px;height:30px}
+            .votes{grid-template-columns:1fr 1fr;gap:8px}
+            .votes button.vb{padding:10px 12px;font-size:15px;min-width:0;overflow:hidden}
+            #app>.row{gap:10px;margin:8px 0 12px}
+            #app>.row button{flex:1;width:auto;margin:0}
+
+            .dock{position:sticky;bottom:0;z-index:5;margin:14px -16px 0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(26,11,16,0),rgba(26,11,16,.94) 40%)}
+            .dock button{margin-top:0}
+            .dock .err{margin:0 0 10px;text-align:center}
+            .who{margin:0 0 6px}
+            .hold{min-height:260px;margin:14px 0 12px}
+            #nextBtn{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;margin-top:0}
       </style>
 </head>
 <body>
@@ -1072,8 +1129,8 @@ function renderSetup() {
       ${chips([3, 5, 8].map(m => ({ v: m, t: m + " minute", a: "'discussionMin'," + m })), S.discussionMin, "setOpt")}
     </div>
 
-    <div class="panel">
-      ${n < 3 ? `<p class="err">Kam se kam 3 players chahiye. Naya add karo.</p>` : ""}
+    <div class="dock">
+          ${n < 3 ? `<p class="err">Kam se kam 3 players chahiye. Naya add karo.</p>` : ""}
       <button class="primary cta" onclick="startRound()" ${n < 3 ? "disabled" : ""}>${ic("play")}Khel shuru karo</button>
     </div>
 
