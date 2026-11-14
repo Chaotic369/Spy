@@ -292,8 +292,53 @@ button:active:not(:disabled) .ic{transform:scale(.9)}
   }
   @media (prefers-reduced-motion:reduce){
     body::before,body::after,#app::before{animation:none!important}
-  }
-  </style>
+      }
+
+      /* ---- Game UI v2: hero, labels, tap page ---- */
+      label{display:flex;align-items:center;gap:8px}
+      label .ic{width:28px;height:28px;padding:6px;border-radius:9px;background:rgba(255,157,60,.16);color:var(--brass);margin:0;vertical-align:0;flex:none}
+      label .cnt{margin-left:auto;background:var(--card2);color:var(--brass);border-radius:999px;padding:3px 10px;font-size:12px;letter-spacing:.04em}
+      ul.players li.empty{justify-content:center;gap:8px;background:transparent;box-shadow:none;color:var(--muted);font-weight:600;font-size:14px;text-align:center}
+      ul.players li.empty .ic{color:var(--brass)}
+
+      .hero{text-align:center;margin:6px 0 20px}
+      .badge{width:96px;height:96px;margin:0 auto 14px;border-radius:30px;display:grid;place-items:center;background:linear-gradient(145deg,#ffb04d,#e8590c 60%,#a8321a);box-shadow:0 8px 0 #6e1608,0 0 44px rgba(255,138,43,.5);transform:rotate(-6deg);animation:badgeFloat 4s ease-in-out infinite}
+      .badge .ic{width:54px;height:54px;color:#2a1000;stroke-width:1.6;margin:0;filter:none;animation:none}
+      @keyframes badgeFloat{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(4deg) translateY(-6px)}}
+      .hero h1.title{display:block;margin:0;font-size:58px;font-weight:900;letter-spacing:.18em;text-indent:.18em;text-align:center;background:linear-gradient(180deg,#fff3e6,#ffb04d 65%,#f0661a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;text-shadow:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.45))}
+      .hero .sub{margin:8px 0 14px}
+      .stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+      .stat{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+      .stat .ic{color:var(--brass)}
+
+      .chip{padding:11px 16px;border-radius:16px}
+      button.cta{font-size:20px;font-weight:800;padding:18px;letter-spacing:.1em;text-transform:uppercase;border-radius:18px;animation:ctaPulse 2.2s ease-in-out infinite}
+      button.cta:disabled,button.cta:active{animation:none}
+      @keyframes ctaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+
+      .who{display:flex;align-items:center;gap:14px;margin:6px 0 8px}
+      .av.lg{width:64px;height:64px;font-size:28px;flex:none;box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 26px rgba(255,138,43,.4)}
+      .wt{min-width:0}
+      .wt h1{margin:0;font-size:32px;word-break:break-word}
+      .wt .sub{margin:0 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.1em}
+      .prog{align-items:center}
+      .prog i.cur{height:14px;box-shadow:0 0 14px rgba(255,138,43,.9);animation:growX .4s ease backwards,blink 1.4s ease-in-out .4s infinite}
+      @keyframes blink{50%{filter:brightness(1.4)}}
+
+      .hold{position:relative;min-height:300px;margin:22px 0 16px;padding:30px 20px;gap:6px;border-radius:32px;overflow:hidden;color:var(--muted);background:radial-gradient(circle at 50% 36%,#6b2f14 0%,#3a1c10 55%,#2a1810 100%);box-shadow:0 10px 0 rgba(0,0,0,.45),inset 0 0 70px rgba(255,138,43,.12);animation:none}
+      .hold:active{background:radial-gradient(circle at 50% 36%,#85391a 0%,#44220f 60%,#2a1810 100%);transform:translateY(5px);box-shadow:0 5px 0 rgba(0,0,0,.45),inset 0 0 70px rgba(255,138,43,.25)}
+      .fp{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(180deg,#ffb04d,#f0661a);box-shadow:0 6px 0 #9c3a0a,0 0 30px rgba(255,138,43,.5);animation:pulseRing 2s ease-out infinite}
+      .fp .ic{width:46px;height:46px;margin:0;color:#2a1000;animation:none}
+      @keyframes pulseRing{0%{box-shadow:0 6px 0 #9c3a0a,0 0 0 0 rgba(255,157,60,.6)}100%{box-shadow:0 6px 0 #9c3a0a,0 0 0 44px rgba(255,157,60,0)}}
+      .hl{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:.06em;text-transform:uppercase}
+      .hs{font-size:14px;color:var(--muted);font-weight:600}
+      .hold.open{background:radial-gradient(circle at 50% 30%,#7a3a16 0%,#3a1c10 60%,#2a1810 100%)}
+      .hold.spyview{background:radial-gradient(circle at 50% 30%,#8a1f12 0%,#3d120c 60%,#2a0f0b 100%)}
+      .hold.open .word{font-size:46px;margin:14px 0 0}
+      .hold .tag{font-size:15px;margin-bottom:10px}
+      .hold p{margin:10px 0 0;font-size:15px;line-height:1.5;color:var(--ink);font-weight:600}
+      #nextBtn{font-size:18px;padding:16px;border-radius:18px}
+      </style>
 </head>
 <body>
 <div id="app"></div>
@@ -591,7 +636,13 @@ const ICONS = {
   eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   eyeoff: '<path d="M3 3l18 18M10.6 5.1A9.6 9.6 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.5 6.5C3.8 8.3 2 12 2 12s4 7 10 7c1.6 0 3-.4 4.3-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
   users: '<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2.2.6 4 2.2 4 5.2"/>',
-  trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>'
+  trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>',
+    bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    star: '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.2 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+    touch: '<path d="M12 11v4a6 6 0 0 1-1 3M8 14a4 4 0 1 1 8 0c0 3-.5 5-1.5 7M5 12a7 7 0 0 1 14 0c0 2 0 4-.5 6M9 21c.7-1.6 1-3 1-4.5"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>'
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ""}</svg>`;
 
@@ -815,13 +866,21 @@ function renderSetup() {
     `<li><span>${esc(p)}</span><span class="score">${S.scores[p] || 0}</span></li>`).join("");
 
   app.innerHTML = `
-    <h1 class="logo">${ic("eye")}Spy</h1>
-    <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
+    <div class="hero">
+          <div class="badge">${ic("eye")}</div>
+          <h1 class="title">SPY</h1>
+          <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
+          <div class="stats">
+            <span class="stat">${ic("users")}${n} players</span>
+            <span class="stat">${ic("bolt")}${S.level === "mushkil" ? "Mushkil" : "Aasaan"}</span>
+            <span class="stat">${ic("trophy")}${S.round} rounds</span>
+          </div>
+        </div>
         ${resumePanel()}
 
     <div class="panel">
-      <label>${ic("users")}Players (3 se 10)</label>
-      <ul class="players">${list}</ul>
+      <label>${ic("users")}Players (3 se 10)<span class="cnt">${n}/10</span></label>
+      <ul class="players">${list || `<li class="empty">${ic("users")}Abhi koi player nahi. Neeche naam add karo.</li>`}</ul>
       <form class="row" onsubmit="addPlayer(event)">
         <input id="newName" maxlength="16" placeholder="Naam likho" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" value="${esc(S.draft)}" oninput="saveDraft(this.value)">
         <button type="submit" class="ghost" style="padding:12px 16px" ${n >= 10 ? "disabled" : ""}>${ic("plus")}Add</button>
@@ -830,26 +889,26 @@ function renderSetup() {
     </div>
 
     <div class="panel">
-      <label>Kitne mushkil words?</label>
+      <label>${ic("bolt")}Kitne mushkil words?</label>
       ${chips([{ v: "aasaan", t: "Aasaan", a: "'level','aasaan'" }, { v: "mushkil", t: "Mushkil", a: "'level','mushkil'" }], S.level, "setOpt")}
 
-      <label>Word pack</label>
+      <label>${ic("target")}Word pack</label>
       ${chips(Object.keys(getPacks()).map(function (k, i) { return { v: k, t: esc(k), a: String(i) }; }), S.pack, "setPack")}
             <p class="hint">${packHint()}</p>
 
-      <label>Spy kitne honge?</label>
+      <label>${ic("eyeoff")}Spy kitne honge?</label>
       ${chips([1, 2, 3].filter(x => x <= maxSpy).map(x => ({ v: x, t: String(x), a: "'spyCount'," + x })), S.spyCount, "setOpt")}
 
-      <label>Spy ko word kaisa milega?</label>
+      <label>${ic("lock")}Spy ko word kaisa milega?</label>
       ${chips([{ v: "twin", t: "Milta-julta word (Undercover)", a: "'spyWord','twin'" }, { v: "none", t: "Kuch nahi (Classic)", a: "'spyWord','none'" }], S.spyWord, "setOpt")}
 
-      <label>Discussion ka timer</label>
+      <label>${ic("clock")}Discussion ka timer</label>
       ${chips([3, 5, 8].map(m => ({ v: m, t: m + " minute", a: "'discussionMin'," + m })), S.discussionMin, "setOpt")}
     </div>
 
     <div class="panel">
       ${n < 3 ? `<p class="err">Kam se kam 3 players chahiye. Naya add karo.</p>` : ""}
-      <button class="primary" onclick="startRound()" ${n < 3 ? "disabled" : ""}>${ic("play")}Khel shuru karo</button>
+      <button class="primary cta" onclick="startRound()" ${n < 3 ? "disabled" : ""}>${ic("play")}Khel shuru karo</button>
     </div>
 
     ${Object.keys(S.scores).length ? `
@@ -931,18 +990,19 @@ function startRound() {
 }
 
 /* ---------- Secret reveal (hold to see) ---------- */
+const holdIdle = () => `<span class="fp">${ic("touch")}</span><b class="hl">Dabaye rakho</b><span class="hs">dekhne ke liye</span>`;
+
 function renderReveal() {
   S.screen = "reveal";
   const p = S.roster[S.revealIdx];
   app.innerHTML = `
-    <div class="prog">${S.roster.map((_, k) => `<i class="${k <= S.revealIdx ? "on" : ""}"></i>`).join("")}</div>
-        <p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p>
-    <h1>${esc(p.name)}</h1>
+    <div class="prog">${S.roster.map((_, k) => `<i class="${k < S.revealIdx ? "on" : k === S.revealIdx ? "on cur" : ""}"></i>`).join("")}</div>
+        <div class="who"><i class="av lg">${ini(p.name)}</i><div class="wt"><p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p><h1>${esc(p.name)}</h1></div></div>
     <p class="sub">Phone sirf inhe do. Baaki log aankh band karein ya dusri taraf dekhein.</p>
     <div id="roleBox" class="hold"
       onpointerdown="showRole(${S.revealIdx})"
       onpointerup="hideRole()" onpointerleave="hideRole()" onpointercancel="hideRole()"
-      oncontextmenu="return false">${ic("eye")}Dabaye rakho, dekhne ke liye</div>
+      oncontextmenu="return false">${holdIdle()}</div>
           <button class="primary" id="nextBtn" disabled onclick="nextReveal()">${ic("arrow")}Ho gaya, agla player</button>
   `;
 }
@@ -986,15 +1046,17 @@ function showRole(i) {
   $("nextBtn").disabled = false;
   const box = $("roleBox");
   if (p.role === "spy" && !p.word) {
-    box.innerHTML = `<div class="tag spy">${ic("eyeoff")}Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
+    box.className = "hold open spyview";
+        box.innerHTML = `<div class="tag spy">${ic("eyeoff")}Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
   } else {
-    box.innerHTML = `<div class="tag">${ic("eye")}Tumhara word</div><div class="word">${esc(p.word)}</div>`;
+    box.className = "hold open";
+        box.innerHTML = `<div class="tag">${ic("eye")}Tumhara word</div><div class="word">${esc(p.word)}</div>`;
   }
 }
 
 function hideRole() {
   const box = $("roleBox");
-  if (box) box.innerHTML = ic("eye") + "Dabaye rakho, dekhne ke liye";
+  if (box) { box.className = "hold"; box.innerHTML = holdIdle(); }
     if (_roleShown) { _roleShown = false; sndHide(); }
 }
 
