@@ -83,6 +83,53 @@ button,input,select{border-radius:6px}
 label .ic,.tag .ic{margin-right:6px}
 h1 .ic{width:.85em;height:.85em;color:var(--brass)}
 .hold .ic{width:40px;height:40px;margin-bottom:12px;color:var(--brass)}
+
+/* ---- Game look ---- */
+:root{--brass:#ffc857;--blood:#ff4d6d;--card:#1b1933;--card2:#292552;--muted:#a49fc8;--ink:#f4f1ff}
+html,body{background-color:#0b0a14;font-family:"Trebuchet MS","Segoe UI",system-ui,-apple-system,sans-serif}
+body{background-image:radial-gradient(700px 380px at 50% -120px,#43307a 0%,rgba(11,10,20,0) 70%),radial-gradient(520px 320px at 100% 100%,#1d2f5a 0%,rgba(11,10,20,0) 70%);background-attachment:fixed}
+h1{font-weight:800;letter-spacing:.02em;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+h1 .ic{filter:drop-shadow(0 0 8px rgba(255,200,87,.6))}
+.sub{font-style:normal;font-weight:600}
+.panel{background:var(--card);border-radius:20px;padding:16px 18px;box-shadow:0 6px 0 rgba(0,0,0,.3);animation:pop .35s cubic-bezier(.2,1.4,.4,1) both}
+.panel:nth-of-type(2){animation-delay:.05s}
+.panel:nth-of-type(3){animation-delay:.1s}
+.panel.resume{background:linear-gradient(135deg,#3a2c12,#2a2140)}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
+label{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;color:var(--muted)}
+input,select{background:var(--card2);border-radius:14px;font-weight:600}
+input:focus,select:focus,button:focus-visible{outline:none;background:#342f66;box-shadow:0 0 0 4px rgba(255,200,87,.25)}
+button{background:var(--card2);border-radius:14px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 0 #13112b;transition:transform .08s ease,box-shadow .08s ease,filter .2s ease}
+button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #13112b}
+button.primary{background:linear-gradient(180deg,#ffe08a,#ffb62e);color:#2b1a00;box-shadow:0 4px 0 #b36b00,0 10px 22px rgba(255,182,46,.28)}
+button.primary:active:not(:disabled){box-shadow:0 1px 0 #b36b00,0 4px 10px rgba(255,182,46,.2)}
+button.ghost{background:#312c5e;color:var(--ink);box-shadow:0 3px 0 #13112b}
+button.ghost:active:not(:disabled){box-shadow:0 1px 0 #13112b}
+button:disabled{filter:grayscale(.8);opacity:.45;box-shadow:0 4px 0 #13112b}
+ul.players li{background:var(--card2);border-radius:14px;padding:10px 12px;margin-bottom:8px;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.av{width:34px;height:34px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7c5cff,#4a8dff);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+ul.players li:nth-child(5n+2) .av,.votes button:nth-child(5n+2) .av{background:linear-gradient(135deg,#ff6b9a,#ff4d6d)}
+ul.players li:nth-child(5n+3) .av,.votes button:nth-child(5n+3) .av{background:linear-gradient(135deg,#34d399,#10a37f)}
+ul.players li:nth-child(5n+4) .av,.votes button:nth-child(5n+4) .av{background:linear-gradient(135deg,#ffb62e,#ff7a18)}
+ul.players li:nth-child(5n) .av,.votes button:nth-child(5n) .av{background:linear-gradient(135deg,#38bdf8,#2563eb)}
+.score{background:linear-gradient(180deg,#ffe08a,#ffb62e);color:#2b1a00;font-weight:800;border-radius:999px;padding:2px 12px;min-width:34px;text-align:center;box-shadow:0 2px 0 #b36b00}
+.tag{background:var(--card2);border-radius:999px;padding:5px 14px;font-weight:700;display:inline-flex;align-items:center}
+.tag.spy{background:linear-gradient(180deg,#ff6b8a,#e0264b);color:#fff;box-shadow:0 3px 0 #8e1230}
+.hold{background:linear-gradient(160deg,#2b2660,#1b1933);border-radius:24px;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 0 0 rgba(255,200,87,.35);animation:glow 2.2s ease-in-out infinite}
+.hold:active{background:linear-gradient(160deg,#3a3280,#241f4a);animation:none;transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 30px rgba(255,200,87,.35)}
+@keyframes glow{0%,100%{box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 0 0 rgba(255,200,87,.3)}50%{box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 0 10px rgba(255,200,87,0)}}
+.word{font-weight:800;text-shadow:0 0 18px rgba(255,200,87,.55);animation:pop .3s cubic-bezier(.2,1.6,.4,1) both}
+.prog{gap:8px}
+.prog i{height:10px;border-radius:999px;background:var(--card2)}
+.prog i.on{background:linear-gradient(90deg,#ffe08a,#ffb62e);box-shadow:0 0 10px rgba(255,200,87,.6)}
+.big{font-weight:800;color:#fff;text-shadow:0 0 22px rgba(124,92,255,.7),0 4px 0 rgba(0,0,0,.35)}
+.big.low{color:#ff6b8a;text-shadow:0 0 22px rgba(255,77,109,.8),0 4px 0 rgba(0,0,0,.35);animation:beat 1s ease-in-out infinite}
+.big.paused{animation:none}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.votes{gap:10px}
+.votes button.vb{background:var(--card2);padding:12px 16px;font-size:17px}
+.votes button.vb.sel{background:linear-gradient(180deg,#ff6b8a,#e0264b);color:#fff;box-shadow:0 4px 0 #8e1230,0 0 22px rgba(255,77,109,.45);transform:translateY(-2px)}
+#toast{background:var(--card2);border-radius:999px;font-weight:700;box-shadow:0 6px 0 rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
