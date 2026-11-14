@@ -171,6 +171,13 @@ input::placeholder{color:var(--muted);opacity:.7}
 .chip.on{background:linear-gradient(180deg,#ffb04d,#f0661a);color:#2a1000;box-shadow:0 4px 0 #9c3a0a,0 8px 18px rgba(240,102,26,.3);transform:translateY(-1px)}
 .chip.on:active:not(:disabled){box-shadow:0 1px 0 #9c3a0a}
 button{-webkit-appearance:none;appearance:none;-webkit-user-select:none;user-select:none}
+
+/* ---- Modal ---- */
+#modal{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,5,3,.72);animation:fade .2s ease both}
+#modal .dlg{width:100%;max-width:360px;background:var(--card);border-radius:22px;padding:22px 18px 18px;box-shadow:0 8px 0 #120905,0 20px 50px rgba(0,0,0,.5);animation:pop .3s cubic-bezier(.2,1.4,.4,1) both}
+#modal p{margin:0 0 16px;font-size:18px;font-weight:700;line-height:1.4;text-align:center}
+#modal .row button{margin-top:0;flex:1;width:auto}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -622,18 +629,36 @@ function packHint() {
     ' <button class="ghost" onclick="resetWords()">Reset</button>';
 }
 
+/* ---------- Custom confirm modal (replaces native confirm) ---------- */
+function askConfirm(msg, onYes) {
+  var old = document.getElementById("modal");
+  if (old) old.remove();
+  var o = document.createElement("div");
+  o.id = "modal";
+  o.innerHTML = '<div class="dlg"><p>' + esc(msg) + '</p><div class="row">' +
+    '<button type="button" class="ghost" id="mNo">' + ic("x") + 'Nahi</button>' +
+    '<button type="button" class="primary" id="mYes">' + ic("check") + 'Haan</button></div></div>';
+  document.body.appendChild(o);
+  var close = function () { o.remove(); };
+  document.getElementById("mNo").onclick = close;
+  document.getElementById("mYes").onclick = function () { close(); onYes(); };
+  o.onclick = function (e) { if (e.target === o) close(); };
+}
+
 function resetWords() {
-  if (!confirm("Saare used words phir se aa sakenge. Pakka?")) return;
-  S.usedWords = {};
-  saveState();
-  renderSetup();
+  askConfirm("Saare used words phir se aa sakenge. Pakka?", function () {
+    S.usedWords = {};
+    saveState();
+    renderSetup();
+  });
 }
 
 function resetScores() {
-  if (!confirm("Saare scores zero karne hain?")) return;
-  S.scores = {};
-  saveState();
-  renderSetup();
+  askConfirm("Saare scores zero karne hain?", function () {
+    S.scores = {};
+    saveState();
+    renderSetup();
+  });
 }
 
 function toast(msg) {
