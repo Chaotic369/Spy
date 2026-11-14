@@ -998,9 +998,28 @@ function hideRole() {
     if (_roleShown) { _roleShown = false; sndHide(); }
 }
 
+function sndNext() {
+  beep([
+    { f: 300, to: 900, at: 0, d: 0.14, type: "sawtooth", v: 0.05 },
+    { f: 784, at: 0.12, d: 0.12, type: "triangle", v: 0.15 },
+    { f: 1175, at: 0.2, d: 0.2, type: "triangle", v: 0.15 }
+  ]);
+  try { if (navigator.vibrate) navigator.vibrate([10, 30, 10]); } catch (e) {}
+}
+function sndStart() {
+  beep([
+    { f: 523, at: 0, d: 0.12, type: "triangle", v: 0.16 },
+    { f: 659, at: 0.1, d: 0.12, type: "triangle", v: 0.16 },
+    { f: 784, at: 0.2, d: 0.12, type: "triangle", v: 0.16 },
+    { f: 1047, at: 0.3, d: 0.3, type: "triangle", v: 0.18 }
+  ]);
+  try { if (navigator.vibrate) navigator.vibrate([15, 40, 15, 40, 25]); } catch (e) {}
+}
+
 function nextReveal() {
   S.revealIdx++;
-  if (S.revealIdx >= S.roster.length) return renderDiscussion(false);
+  if (S.revealIdx >= S.roster.length) { sndStart(); return renderDiscussion(false); }
+  sndNext();
   renderReveal();
 }
 
