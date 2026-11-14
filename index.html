@@ -162,6 +162,15 @@ ul.players li:nth-child(5n) .av,.votes button:nth-child(5n) .av{background:linea
 .big{text-shadow:0 0 22px rgba(240,102,26,.7),0 4px 0 rgba(0,0,0,.4)}
 .big.low{color:#ff5a3c;text-shadow:0 0 22px rgba(230,58,31,.85),0 4px 0 rgba(0,0,0,.4)}
 .votes button.vb.sel{background:linear-gradient(180deg,#ff5a3c,#c42a14);box-shadow:0 4px 0 #6e1608,0 0 22px rgba(230,58,31,.5)}
+
+/* ---- Custom controls (no native UI) ---- */
+input{-webkit-appearance:none;appearance:none;caret-color:var(--brass);box-shadow:inset 0 3px 0 rgba(0,0,0,.25)}
+input::placeholder{color:var(--muted);opacity:.7}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 4px}
+.chip{width:auto;margin:0;padding:10px 16px;font-size:15px;background:var(--card2);color:var(--ink);text-align:center}
+.chip.on{background:linear-gradient(180deg,#ffb04d,#f0661a);color:#2a1000;box-shadow:0 4px 0 #9c3a0a,0 8px 18px rgba(240,102,26,.3);transform:translateY(-1px)}
+.chip.on:active:not(:disabled){box-shadow:0 1px 0 #9c3a0a}
+button{-webkit-appearance:none;appearance:none;-webkit-user-select:none;user-select:none}
 </style>
 </head>
 <body>
@@ -463,6 +472,15 @@ const ICONS = {
   trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>'
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ""}</svg>`;
+
+/* ---------- Custom option chips (replace native selects) ---------- */
+function chips(opts, sel, fn) {
+  return '<div class="chips">' + opts.map(function (o) {
+    return '<button type="button" class="chip' + (o.v === sel ? ' on' : '') + '" onclick="' + fn + '(' + o.a + ')">' + o.t + '</button>';
+  }).join("") + '</div>';
+}
+function setOpt(k, v) { S[k] = v; saveState(); renderSetup(); }
+function setPack(i) { S.pack = Object.keys(getPacks())[i]; saveState(); renderSetup(); }
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const shuffle = arr => {
@@ -673,26 +691,20 @@ function renderSetup() {
 
     <div class="panel">
       <label>Kitne mushkil words?</label>
-      <select onchange="S.level=this.value;saveState();renderSetup()">
-        <option value="aasaan" ${S.level === "aasaan" ? "selected" : ""}>Aasaan</option>
-        <option value="mushkil" ${S.level === "mushkil" ? "selected" : ""}>Mushkil</option>
-      </select>
+      ${chips([{ v: "aasaan", t: "Aasaan", a: "'level','aasaan'" }, { v: "mushkil", t: "Mushkil", a: "'level','mushkil'" }], S.level, "setOpt")}
 
       <label>Word pack</label>
-      <select onchange="S.pack=this.value;saveState();renderSetup()">${packOpts}</select>
+      ${chips(Object.keys(getPacks()).map(function (k, i) { return { v: k, t: esc(k), a: String(i) }; }), S.pack, "setPack")}
             <p class="hint">${packHint()}</p>
 
       <label>Spy kitne honge?</label>
-      <select onchange="S.spyCount=+this.value;saveState()">${spyOpts}</select>
+      ${chips([1, 2, 3].filter(x => x <= maxSpy).map(x => ({ v: x, t: String(x), a: "'spyCount'," + x })), S.spyCount, "setOpt")}
 
       <label>Spy ko word kaisa milega?</label>
-      <select onchange="S.spyWord=this.value;saveState()">
-        <option value="twin" ${S.spyWord === "twin" ? "selected" : ""}>Milta-julta word (Undercover)</option>
-        <option value="none" ${S.spyWord === "none" ? "selected" : ""}>Kuch nahi (Classic)</option>
-      </select>
+      ${chips([{ v: "twin", t: "Milta-julta word (Undercover)", a: "'spyWord','twin'" }, { v: "none", t: "Kuch nahi (Classic)", a: "'spyWord','none'" }], S.spyWord, "setOpt")}
 
       <label>Discussion ka timer</label>
-      <select onchange="S.discussionMin=+this.value;saveState()">${timerOpts}</select>
+      ${chips([3, 5, 8].map(m => ({ v: m, t: m + " minute", a: "'discussionMin'," + m })), S.discussionMin, "setOpt")}
     </div>
 
     <div class="panel">
