@@ -292,272 +292,8 @@ button:active:not(:disabled) .ic{transform:scale(.9)}
   }
   @media (prefers-reduced-motion:reduce){
     body::before,body::after,#app::before{animation:none!important}
-      }
-
-      /* ---- Game UI v2: hero, labels, tap page ---- */
-      label{display:flex;align-items:center;gap:8px}
-      label .ic{width:28px;height:28px;padding:6px;border-radius:9px;background:rgba(255,157,60,.16);color:var(--brass);margin:0;vertical-align:0;flex:none}
-      label .cnt{margin-left:auto;background:var(--card2);color:var(--brass);border-radius:999px;padding:3px 10px;font-size:12px;letter-spacing:.04em}
-      ul.players li.empty{justify-content:center;gap:8px;background:transparent;box-shadow:none;color:var(--muted);font-weight:600;font-size:14px;text-align:center}
-      ul.players li.empty .ic{color:var(--brass)}
-
-      .hero{text-align:center;margin:6px 0 20px}
-      .badge{width:96px;height:96px;margin:0 auto 14px;border-radius:30px;display:grid;place-items:center;background:linear-gradient(145deg,#ffb04d,#e8590c 60%,#a8321a);box-shadow:0 8px 0 #6e1608,0 0 44px rgba(255,138,43,.5);transform:rotate(-6deg);animation:badgeFloat 4s ease-in-out infinite}
-      .badge .ic{width:54px;height:54px;color:#2a1000;stroke-width:1.6;margin:0;filter:none;animation:none}
-      @keyframes badgeFloat{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(4deg) translateY(-6px)}}
-      .hero h1.title{display:block;margin:0;font-size:58px;font-weight:900;letter-spacing:.18em;text-indent:.18em;text-align:center;background:linear-gradient(180deg,#fff3e6,#ffb04d 65%,#f0661a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;text-shadow:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.45))}
-      .hero .sub{margin:8px 0 14px}
-      .stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-      .stat{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;box-shadow:0 3px 0 rgba(0,0,0,.35)}
-      .stat .ic{color:var(--brass)}
-
-      .chip{padding:11px 16px;border-radius:16px}
-      button.cta{font-size:20px;font-weight:800;padding:18px;letter-spacing:.1em;text-transform:uppercase;border-radius:18px;animation:ctaPulse 2.2s ease-in-out infinite}
-      button.cta:disabled,button.cta:active{animation:none}
-      @keyframes ctaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
-
-      .who{display:flex;align-items:center;gap:14px;margin:6px 0 8px}
-      .av.lg{width:64px;height:64px;font-size:28px;flex:none;box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 26px rgba(255,138,43,.4)}
-      .wt{min-width:0}
-      .wt h1{margin:0;font-size:32px;word-break:break-word}
-      .wt .sub{margin:0 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.1em}
-      .prog{align-items:center}
-      .prog i.cur{height:14px;box-shadow:0 0 14px rgba(255,138,43,.9);animation:growX .4s ease backwards,blink 1.4s ease-in-out .4s infinite}
-      @keyframes blink{50%{filter:brightness(1.4)}}
-
-      .hold{position:relative;min-height:300px;margin:22px 0 16px;padding:30px 20px;gap:6px;border-radius:32px;overflow:hidden;color:var(--muted);background:radial-gradient(circle at 50% 36%,#6b2f14 0%,#3a1c10 55%,#2a1810 100%);box-shadow:0 10px 0 rgba(0,0,0,.45),inset 0 0 70px rgba(255,138,43,.12);animation:none}
-      .hold:active{background:radial-gradient(circle at 50% 36%,#85391a 0%,#44220f 60%,#2a1810 100%);transform:translateY(5px);box-shadow:0 5px 0 rgba(0,0,0,.45),inset 0 0 70px rgba(255,138,43,.25)}
-      .fp{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(180deg,#ffb04d,#f0661a);box-shadow:0 6px 0 #9c3a0a,0 0 30px rgba(255,138,43,.5);animation:pulseRing 2s ease-out infinite}
-      .fp .ic{width:46px;height:46px;margin:0;color:#2a1000;animation:none}
-      @keyframes pulseRing{0%{box-shadow:0 6px 0 #9c3a0a,0 0 0 0 rgba(255,157,60,.6)}100%{box-shadow:0 6px 0 #9c3a0a,0 0 0 44px rgba(255,157,60,0)}}
-      .hl{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:.06em;text-transform:uppercase}
-      .hs{font-size:14px;color:var(--muted);font-weight:600}
-      .hold.open{background:radial-gradient(circle at 50% 30%,#7a3a16 0%,#3a1c10 60%,#2a1810 100%)}
-      .hold.spyview{background:radial-gradient(circle at 50% 30%,#8a1f12 0%,#3d120c 60%,#2a0f0b 100%)}
-      .hold.open .word{font-size:46px;margin:14px 0 0}
-      .hold .tag{font-size:15px;margin-bottom:10px}
-      .hold p{margin:10px 0 0;font-size:15px;line-height:1.5;color:var(--ink);font-weight:600}
-      #nextBtn{font-size:18px;padding:16px;border-radius:18px}
-
-        /* ---- Neumorphic theme ---- */
-        :root{
-          --bg:#2b1a14;--card:#2b1a14;--card2:#2b1a14;--ink:#f3e3d3;--muted:#b39580;--brass:#ff9d3c;
-          --sh-d:#1a0e09;--sh-l:#3d261c;
-          --raise:8px 8px 18px var(--sh-d),-7px -7px 16px var(--sh-l);
-          --raise-s:4px 4px 10px var(--sh-d),-3px -3px 9px var(--sh-l);
-          --inset:inset 4px 4px 9px var(--sh-d),inset -3px -3px 8px var(--sh-l);
-        }
-        html,body{background:#2b1a14;background-color:#2b1a14}
-        body{background-image:none}
-        body::before,body::after,#app::before{display:none}
-
-        h1{text-shadow:3px 3px 6px var(--sh-d),-2px -2px 5px var(--sh-l)}
-        h1 .ic{filter:none}
-        .hero h1.title{background:none;-webkit-text-fill-color:var(--brass);color:var(--brass);filter:none;text-shadow:4px 4px 8px var(--sh-d),-3px -3px 7px var(--sh-l)}
-        .hero{margin-top:14px}
-
-        .panel,.panel.resume{background:var(--bg);box-shadow:var(--raise);border-radius:26px}
-        label{color:var(--muted)}
-        label .ic{background:var(--bg);box-shadow:var(--raise-s);color:var(--brass)}
-        label .cnt{background:var(--bg);box-shadow:var(--inset)}
-
-        input{background:var(--bg);box-shadow:var(--inset);border-radius:16px}
-        input:focus,select:focus{background:var(--bg);box-shadow:var(--inset),0 0 16px rgba(255,157,60,.28)}
-
-        button{background:var(--bg);color:var(--ink);box-shadow:var(--raise-s);border-radius:16px}
-        button:active:not(:disabled){transform:none;box-shadow:var(--inset)}
-        button:focus-visible{background:var(--bg);box-shadow:var(--raise-s),0 0 16px rgba(255,157,60,.35)}
-        button.primary{background:var(--bg);color:var(--brass);font-weight:800;box-shadow:var(--raise-s)}
-        button.primary:active:not(:disabled){box-shadow:var(--inset)}
-        button.primary::after{display:none}
-        button.ghost{background:var(--bg);color:var(--muted);box-shadow:var(--raise-s)}
-        button.ghost:active:not(:disabled){box-shadow:var(--inset)}
-        button:disabled{filter:none;opacity:.5;box-shadow:var(--inset)}
-
-        .chip{background:var(--bg);color:var(--muted);box-shadow:var(--raise-s)}
-        .chip.on{background:var(--bg);color:var(--brass);box-shadow:var(--inset);transform:none}
-        .chip.on:active:not(:disabled){box-shadow:var(--inset)}
-
-        ul.players li{background:var(--bg);box-shadow:var(--inset);border-radius:16px}
-        .av,ul.players li .av,.votes button .av{background:var(--bg)!important;color:var(--brass);box-shadow:var(--raise-s)}
-        .av.lg{box-shadow:var(--raise)}
-        .score{background:var(--bg);color:var(--brass);box-shadow:var(--inset)}
-        .tag{background:var(--bg);color:var(--muted);box-shadow:var(--raise-s)}
-        .tag.spy{background:var(--bg);color:#ff6a4d;box-shadow:var(--inset)}
-        .stat{background:var(--bg);box-shadow:var(--raise-s)}
-
-        .prog i{background:var(--bg);box-shadow:var(--inset)}
-        .prog i.on{background:var(--brass);box-shadow:0 0 10px rgba(255,157,60,.5)}
-        .prog i.cur{box-shadow:0 0 14px rgba(255,157,60,.8)}
-
-        .hold{background:var(--bg);box-shadow:var(--raise);animation:none}
-        .hold:active{background:var(--bg);transform:none;box-shadow:var(--inset)}
-        .hold.open,.hold.spyview{background:var(--bg);box-shadow:var(--inset)}
-        .hold.spyview .tag.spy,.hold.spyview p{color:#ff8a6d}
-        .fp{background:var(--bg);box-shadow:var(--raise);animation:pulseRing 2.4s ease-out infinite}
-        .fp .ic{color:var(--brass)}
-        @keyframes pulseRing{0%{box-shadow:var(--raise),0 0 0 0 rgba(255,157,60,.35)}100%{box-shadow:var(--raise),0 0 0 34px rgba(255,157,60,0)}}
-        .hl{color:var(--ink)}
-        .word{color:var(--brass);text-shadow:0 0 14px rgba(255,157,60,.35)}
-
-        .big{color:var(--ink);text-shadow:4px 4px 8px var(--sh-d),-3px -3px 7px var(--sh-l)}
-        .big.low{color:#ff6a4d;text-shadow:4px 4px 8px var(--sh-d),-3px -3px 7px var(--sh-l)}
-
-        .votes button.vb{background:var(--bg);box-shadow:var(--raise-s)}
-        .votes button.vb.sel{background:var(--bg);color:#ff6a4d;box-shadow:var(--inset);transform:none}
-
-        #toast{background:var(--bg);box-shadow:var(--raise-s)}
-        #modal{background:rgba(14,7,4,.72)}
-        #modal .dlg{background:var(--bg);box-shadow:var(--raise)}
-
-          /* ---- Glass game UI ---- */
-          :root{
-            --bg:rgba(255,255,255,.09);--card:rgba(255,255,255,.09);--card2:rgba(255,255,255,.12);
-            --ink:#fff3e6;--muted:#d9b9a0;--brass:#ffb04d;
-            --raise:0 12px 34px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.32);
-            --raise-s:0 5px 0 rgba(0,0,0,.38),0 10px 20px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.3);
-            --inset:inset 0 3px 8px rgba(0,0,0,.4),inset 0 -1px 0 rgba(255,255,255,.14);
-          }
-          html,body{background:transparent}
-          html{background:linear-gradient(160deg,#2a0d14 0%,#1a0b10 50%,#2b1208 100%) fixed}
-          #app{padding-top:64px}
-          body::before,body::after,#app::before{display:block}
-          body::before{
-            background:
-              radial-gradient(38% 34% at 20% 25%,rgba(255,110,30,.5) 0%,rgba(255,110,30,0) 70%),
-              radial-gradient(34% 30% at 80% 20%,rgba(230,40,60,.46) 0%,rgba(230,40,60,0) 70%),
-              radial-gradient(40% 36% at 70% 80%,rgba(194,24,91,.42) 0%,rgba(194,24,91,0) 70%),
-              radial-gradient(30% 28% at 15% 85%,rgba(255,190,80,.34) 0%,rgba(255,190,80,0) 70%);
-            animation:aurora 20s ease-in-out infinite alternate
-          }
-          #app::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 15% 20%,rgba(255,92,60,.4) 0,rgba(255,92,60,0) 22%),radial-gradient(circle at 85% 35%,rgba(255,176,77,.3) 0,rgba(255,176,77,0) 20%),radial-gradient(circle at 30% 85%,rgba(194,24,91,.36) 0,rgba(194,24,91,0) 24%);animation:orbs 24s ease-in-out infinite alternate}
-          @keyframes orbs{from{transform:translate(0,0) scale(1)}to{transform:translate(4%,-5%) scale(1.18)}}
-
-          .panel,.panel.resume,button,input,.chip,.tag,.stat,.hold,ul.players li,.prog i,label .cnt,#toast,#modal .dlg{-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%)}
-
-          .hero h1.title{background:linear-gradient(180deg,#fff3e6,#ffb04d 60%,#f0661a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;text-shadow:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.45))}
-          h1{text-shadow:0 3px 0 rgba(0,0,0,.4)}
-          .big{color:#fff;text-shadow:0 0 24px rgba(255,157,60,.6),0 4px 0 rgba(0,0,0,.4)}
-          .big.low{color:#ff6a4d;text-shadow:0 0 24px rgba(255,70,40,.8),0 4px 0 rgba(0,0,0,.4)}
-
-          .panel,.panel.resume{background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05));box-shadow:var(--raise);border-radius:26px}
-          .panel.resume{background:linear-gradient(160deg,rgba(255,176,77,.28),rgba(255,255,255,.06))}
-          label .ic{background:linear-gradient(135deg,#ffb04d,#e8590c);color:#2a1000;box-shadow:0 3px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.45)}
-          label .cnt{background:rgba(0,0,0,.28);color:var(--brass);box-shadow:var(--inset)}
-
-          input{background:rgba(0,0,0,.28);box-shadow:var(--inset);color:var(--ink)}
-          input:focus,select:focus{background:rgba(0,0,0,.34);box-shadow:var(--inset),0 0 0 3px rgba(255,176,77,.45),0 0 22px rgba(255,157,60,.35)}
-
-          button{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.07));color:var(--ink);box-shadow:var(--raise-s)}
-          button:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.4),inset 0 2px 8px rgba(0,0,0,.3)}
-          button:focus-visible{background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.1));box-shadow:var(--raise-s),0 0 0 3px rgba(255,176,77,.45)}
-          button.ghost{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));color:var(--ink);box-shadow:var(--raise-s)}
-          button.ghost:active:not(:disabled){box-shadow:0 1px 0 rgba(0,0,0,.4),inset 0 2px 8px rgba(0,0,0,.3)}
-          button.primary{background:linear-gradient(180deg,#ffc15e,#f0661a);color:#2a1000;box-shadow:0 5px 0 #9c3a0a,0 12px 26px rgba(240,102,26,.42),inset 0 1px 0 rgba(255,255,255,.55)}
-          button.primary:active:not(:disabled){box-shadow:0 1px 0 #9c3a0a,0 4px 12px rgba(240,102,26,.3),inset 0 1px 0 rgba(255,255,255,.4)}
-          button.primary::after{display:block}
-          button:disabled{filter:grayscale(.6);opacity:.5;box-shadow:var(--inset)}
-          button.cta{letter-spacing:.12em}
-
-          .chip{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.05));color:var(--ink);box-shadow:var(--raise-s)}
-          .chip.on{background:linear-gradient(180deg,#ffc15e,#f0661a);color:#2a1000;box-shadow:0 4px 0 #9c3a0a,0 8px 20px rgba(240,102,26,.4),inset 0 1px 0 rgba(255,255,255,.5);transform:translateY(-1px)}
-          .chip.on:active:not(:disabled){box-shadow:0 1px 0 #9c3a0a;transform:translateY(3px)}
-
-          ul.players li{background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.04));box-shadow:0 4px 0 rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.22);border-radius:18px}
-          ul.players li.empty{background:transparent;box-shadow:none}
-          .av,ul.players li .av,.votes button .av{background:linear-gradient(135deg,#ff9d3c,#e8590c)!important;color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4)}
-          ul.players li:nth-child(5n+2) .av,.votes button:nth-child(5n+2) .av{background:linear-gradient(135deg,#ff6b4a,#d62d20)!important}
-          ul.players li:nth-child(5n+3) .av,.votes button:nth-child(5n+3) .av{background:linear-gradient(135deg,#ff5c9a,#c2185b)!important}
-          ul.players li:nth-child(5n+4) .av,.votes button:nth-child(5n+4) .av{background:linear-gradient(135deg,#ffd166,#f08a1c)!important}
-          ul.players li:nth-child(5n) .av,.votes button:nth-child(5n) .av{background:linear-gradient(135deg,#e8743b,#a8321a)!important}
-          .av.lg{box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 28px rgba(255,138,43,.5),inset 0 1px 0 rgba(255,255,255,.4)}
-
-          .score{background:linear-gradient(180deg,#ffe08a,#ffb62e);color:#2a1000;box-shadow:0 2px 0 #b36b00,inset 0 1px 0 rgba(255,255,255,.6)}
-          .tag{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.07));color:var(--ink);box-shadow:var(--raise-s)}
-          .tag.spy{background:linear-gradient(180deg,#ff6b4d,#c42a14);color:#fff;box-shadow:0 3px 0 #6e1608,inset 0 1px 0 rgba(255,255,255,.4)}
-          .stat{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));box-shadow:0 3px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.28)}
-
-          .prog i{background:rgba(0,0,0,.3);box-shadow:var(--inset)}
-          .prog i.on{background:linear-gradient(90deg,#ffc15e,#f0661a);box-shadow:0 0 12px rgba(255,157,60,.7)}
-          .prog i.cur{box-shadow:0 0 18px rgba(255,157,60,.95)}
-
-          .hold{background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.04));box-shadow:0 10px 0 rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.3);animation:glow 2.4s ease-in-out infinite}
-          .hold:active{background:linear-gradient(160deg,rgba(255,190,110,.32),rgba(255,120,40,.12));transform:translateY(5px);box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 36px rgba(255,138,43,.4),inset 0 1px 0 rgba(255,255,255,.3);animation:none}
-          .hold.open{background:linear-gradient(160deg,rgba(255,176,77,.34),rgba(255,255,255,.05));box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 40px rgba(255,138,43,.35),inset 0 1px 0 rgba(255,255,255,.3)}
-          .hold.spyview{background:linear-gradient(160deg,rgba(255,70,50,.45),rgba(120,15,10,.35));box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 40px rgba(255,60,40,.45),inset 0 1px 0 rgba(255,255,255,.25)}
-          .hold.spyview .tag.spy,.hold.spyview p{color:#fff}
-          .fp{background:linear-gradient(180deg,#ffc15e,#f0661a);box-shadow:0 6px 0 #9c3a0a,0 0 30px rgba(255,138,43,.5),inset 0 1px 0 rgba(255,255,255,.5);animation:pulseRing 2s ease-out infinite}
-          .fp .ic{color:#2a1000}
-          @keyframes pulseRing{0%{box-shadow:0 6px 0 #9c3a0a,0 0 0 0 rgba(255,157,60,.6)}100%{box-shadow:0 6px 0 #9c3a0a,0 0 0 44px rgba(255,157,60,0)}}
-          .word{color:#ffd28a;text-shadow:0 0 20px rgba(255,157,60,.7)}
-
-          .votes button.vb{background:linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,.05));box-shadow:var(--raise-s)}
-          .votes button.vb.sel{background:linear-gradient(180deg,#ff6b4d,#c42a14);color:#fff;box-shadow:0 5px 0 #6e1608,0 0 26px rgba(255,70,40,.5),inset 0 1px 0 rgba(255,255,255,.4);transform:translateY(-2px)}
-
-          #toast{background:rgba(60,30,20,.6);box-shadow:0 8px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25)}
-          #modal{background:rgba(12,5,6,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-          #modal .dlg{background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.06));box-shadow:0 14px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.35)}
-
-          #sndBtn{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:46px;height:46px;padding:0;margin:0;z-index:30;border-radius:16px}
-          #sndBtn .ic{width:22px;height:22px;margin:0}
-
-            /* ---- Performance + layout pass ---- */
-            *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-            button,.chip,.hold,#nextBtn,.votes button{touch-action:manipulation}
-            html{background:linear-gradient(160deg,#2a0d14 0%,#1a0b10 50%,#2b1208 100%)}
-            body::before{inset:0;animation:none!important;will-change:auto;background:radial-gradient(60% 40% at 15% 10%,rgba(255,110,30,.28) 0%,rgba(255,110,30,0) 70%),radial-gradient(55% 40% at 90% 90%,rgba(194,24,91,.26) 0%,rgba(194,24,91,0) 70%)}
-            body::after,#app::before,#app::after{display:none!important;animation:none!important}
-            h1 .ic,.hold .ic,button.primary::after,.badge{animation:none!important}
-            button.primary::after{display:none!important}
-            button.cta,.hold,.fp,.ul.players li,.av,.chip,.chip.on,.score,.tag,.tag.spy,.votes button,ul.players li{animation:none!important}
-            .hero h1.title{background:none;-webkit-text-fill-color:currentColor;color:#ffb04d;filter:none;text-shadow:0 3px 0 rgba(0,0,0,.45)}
-
-            #app{padding:56px 0 28px}
-            .panel,.panel.resume{background:linear-gradient(160deg,rgba(72,34,36,.92),rgba(44,20,24,.92));box-shadow:0 4px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.14);border-radius:22px;padding:16px;margin:12px 0}
-            .panel.resume{background:linear-gradient(160deg,rgba(120,66,20,.95),rgba(60,28,24,.95))}
-            button,.tag,.stat,.chip,ul.players li,.votes button.vb{box-shadow:0 3px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18)}
-            button{background:rgba(255,255,255,.1)}
-            button.primary,button.primary:active:not(:disabled){box-shadow:0 4px 0 #9c3a0a,inset 0 1px 0 rgba(255,255,255,.5)}
-            button:active:not(:disabled){box-shadow:0 1px 0 rgba(0,0,0,.4)}
-            .chip.on{box-shadow:0 3px 0 #9c3a0a,inset 0 1px 0 rgba(255,255,255,.5);transform:none}
-            input{background:rgba(0,0,0,.35)}
-            .hold{box-shadow:0 6px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2)}
-            .hold:active,.hold.open,.hold.spyview{box-shadow:0 2px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2)}
-            .votes button.vb.sel{box-shadow:0 3px 0 #6e1608,inset 0 1px 0 rgba(255,255,255,.4);transform:none}
-            .fp{position:relative;box-shadow:0 5px 0 #9c3a0a,inset 0 1px 0 rgba(255,255,255,.5)}
-            .fp::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,157,60,.4);z-index:0;pointer-events:none;animation:ringOut 2s ease-out infinite}
-            .fp .ic{position:relative;z-index:1}
-            @keyframes ringOut{from{transform:scale(1);opacity:.6}to{transform:scale(1.55);opacity:0}}
-            .big,.big.low{text-shadow:0 3px 0 rgba(0,0,0,.4)}
-
-            .hero{margin:0 0 14px}
-            .badge{width:72px;height:72px;margin:0 auto 10px;border-radius:24px;box-shadow:0 5px 0 #6e1608;transform:rotate(-6deg)}
-            .badge .ic{width:40px;height:40px}
-            .hero h1.title{font-size:44px}
-            .hero .sub{margin:6px 0 12px;font-size:14px}
-            label{margin:18px 0 8px}
-            .panel>label:first-child{margin-top:0}
-            .hint{margin:10px 0 0}
-            .chips{gap:8px}
-            .chip{padding:10px 14px}
-
-            ul.players{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
-            ul.players li{margin:0;padding:8px 10px;min-width:0}
-            ul.players li.empty{grid-column:1/-1}
-            .pn{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-            .av{width:30px;height:30px}
-            .votes{grid-template-columns:1fr 1fr;gap:8px}
-            .votes button.vb{padding:10px 12px;font-size:15px;min-width:0;overflow:hidden}
-            #app>.row{gap:10px;margin:8px 0 12px}
-            #app>.row button{flex:1;width:auto;margin:0}
-
-            .dock{position:sticky;bottom:0;z-index:5;margin:14px -16px 0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(26,11,16,0),rgba(26,11,16,.94) 40%)}
-            .dock button{margin-top:0}
-            .dock .err{margin:0 0 10px;text-align:center}
-            .who{margin:0 0 6px}
-            .hold{min-height:260px;margin:14px 0 12px}
-            #nextBtn{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;margin-top:0}
-      </style>
+  }
+  </style>
 </head>
 <body>
 <div id="app"></div>
@@ -855,15 +591,7 @@ const ICONS = {
   eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   eyeoff: '<path d="M3 3l18 18M10.6 5.1A9.6 9.6 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.5 6.5C3.8 8.3 2 12 2 12s4 7 10 7c1.6 0 3-.4 4.3-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
   users: '<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2.2.6 4 2.2 4 5.2"/>',
-  trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>',
-    bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
-    star: '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.2 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
-    touch: '<path d="M12 11v4a6 6 0 0 1-1 3M8 14a4 4 0 1 1 8 0c0 3-.5 5-1.5 7M5 12a7 7 0 0 1 14 0c0 2 0 4-.5 6M9 21c.7-1.6 1-3 1-4.5"/>',
-    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-    lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
-      sound: '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>',
-      mute: '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/>'
+  trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>'
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ""}</svg>`;
 
@@ -1026,7 +754,6 @@ function askConfirm(msg, onYes) {
     '<button type="button" class="ghost" id="mNo">' + ic("x") + 'Nahi</button>' +
     '<button type="button" class="primary" id="mYes">' + ic("check") + 'Haan</button></div></div>';
   document.body.appendChild(o);
-    sndModal();
   var close = function () { o.remove(); };
   document.getElementById("mNo").onclick = close;
   document.getElementById("mYes").onclick = function () { close(); onYes(); };
@@ -1057,7 +784,6 @@ function toast(msg) {
     document.body.appendChild(t);
   }
   t.textContent = msg;
-    sndPop();
   t.className = "show";
   clearTimeout(toast._t);
   toast._t = setTimeout(function () { t.className = ""; }, 3200);
@@ -1089,21 +815,13 @@ function renderSetup() {
     `<li><span>${esc(p)}</span><span class="score">${S.scores[p] || 0}</span></li>`).join("");
 
   app.innerHTML = `
-    <div class="hero">
-          
-          <h1 class="title">SPY</h1>
-          <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
-          <div class="stats">
-            <span class="stat">${ic("users")}${n} players</span>
-            <span class="stat">${ic("bolt")}${S.level === "mushkil" ? "Mushkil" : "Aasaan"}</span>
-            <span class="stat">${ic("trophy")}${S.round} rounds</span>
-          </div>
-        </div>
+    <h1 class="logo">${ic("eye")}Spy</h1>
+    <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
         ${resumePanel()}
 
     <div class="panel">
-      <label>${ic("users")}Players (3 se 10)<span class="cnt">${n}/10</span></label>
-      <ul class="players">${list || `<li class="empty">${ic("users")}Abhi koi player nahi. Neeche naam add karo.</li>`}</ul>
+      <label>${ic("users")}Players (3 se 10)</label>
+      <ul class="players">${list}</ul>
       <form class="row" onsubmit="addPlayer(event)">
         <input id="newName" maxlength="16" placeholder="Naam likho" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" value="${esc(S.draft)}" oninput="saveDraft(this.value)">
         <button type="submit" class="ghost" style="padding:12px 16px" ${n >= 10 ? "disabled" : ""}>${ic("plus")}Add</button>
@@ -1112,26 +830,26 @@ function renderSetup() {
     </div>
 
     <div class="panel">
-      <label>${ic("bolt")}Kitne mushkil words?</label>
+      <label>Kitne mushkil words?</label>
       ${chips([{ v: "aasaan", t: "Aasaan", a: "'level','aasaan'" }, { v: "mushkil", t: "Mushkil", a: "'level','mushkil'" }], S.level, "setOpt")}
 
-      <label>${ic("target")}Word pack</label>
+      <label>Word pack</label>
       ${chips(Object.keys(getPacks()).map(function (k, i) { return { v: k, t: esc(k), a: String(i) }; }), S.pack, "setPack")}
             <p class="hint">${packHint()}</p>
 
-      <label>${ic("star")}Spy kitne honge?</label>
+      <label>Spy kitne honge?</label>
       ${chips([1, 2, 3].filter(x => x <= maxSpy).map(x => ({ v: x, t: String(x), a: "'spyCount'," + x })), S.spyCount, "setOpt")}
 
-      <label>${ic("lock")}Spy ko word kaisa milega?</label>
+      <label>Spy ko word kaisa milega?</label>
       ${chips([{ v: "twin", t: "Milta-julta word (Undercover)", a: "'spyWord','twin'" }, { v: "none", t: "Kuch nahi (Classic)", a: "'spyWord','none'" }], S.spyWord, "setOpt")}
 
-      <label>${ic("clock")}Discussion ka timer</label>
+      <label>Discussion ka timer</label>
       ${chips([3, 5, 8].map(m => ({ v: m, t: m + " minute", a: "'discussionMin'," + m })), S.discussionMin, "setOpt")}
     </div>
 
-    <div class="dock">
-          ${n < 3 ? `<p class="err">Kam se kam 3 players chahiye. Naya add karo.</p>` : ""}
-      <button class="primary cta" onclick="startRound()" ${n < 3 ? "disabled" : ""}>${ic("play")}Khel shuru karo</button>
+    <div class="panel">
+      ${n < 3 ? `<p class="err">Kam se kam 3 players chahiye. Naya add karo.</p>` : ""}
+      <button class="primary" onclick="startRound()" ${n < 3 ? "disabled" : ""}>${ic("play")}Khel shuru karo</button>
     </div>
 
     ${Object.keys(S.scores).length ? `
@@ -1149,12 +867,10 @@ function addPlayer(e) {
   if (!v) return;
   if (S.players.some(p => p.toLowerCase() === v.toLowerCase())) {
     S.err = "Ye naam pehle se hai.";
-        sndErr();
     return renderSetup();
   }
   if (S.players.length >= 10) return;
   S.players.push(v);
-    sndAdd();
     S.draft = "";
     S.err = "";
     saveState();
@@ -1164,7 +880,6 @@ function addPlayer(e) {
 
 function removePlayer(i) {
   S.players.splice(i, 1);
-    sndRemove();
     saveState();
   S.err = "";
   renderSetup();
@@ -1190,7 +905,6 @@ function pickPair() {
 
 function startRound() {
   if (S.players.length < 3) return;
-    sndGo();
   S.err = "";
   clearRound();
     const pair = pickPair();
@@ -1217,100 +931,41 @@ function startRound() {
 }
 
 /* ---------- Secret reveal (hold to see) ---------- */
-const holdIdle = () => `<span class="fp">${ic("touch")}</span><b class="hl">Dabaye rakho</b><span class="hs">dekhne ke liye</span>`;
-
 function renderReveal() {
   S.screen = "reveal";
   const p = S.roster[S.revealIdx];
   app.innerHTML = `
-    <div class="prog">${S.roster.map((_, k) => `<i class="${k < S.revealIdx ? "on" : k === S.revealIdx ? "on cur" : ""}"></i>`).join("")}</div>
-        <div class="who"><i class="av lg">${ini(p.name)}</i><div class="wt"><p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p><h1>${esc(p.name)}</h1></div></div>
+    <div class="prog">${S.roster.map((_, k) => `<i class="${k <= S.revealIdx ? "on" : ""}"></i>`).join("")}</div>
+        <p class="sub">Player ${S.revealIdx + 1} of ${S.roster.length}</p>
+    <h1>${esc(p.name)}</h1>
     <p class="sub">Phone sirf inhe do. Baaki log aankh band karein ya dusri taraf dekhein.</p>
     <div id="roleBox" class="hold"
       onpointerdown="showRole(${S.revealIdx})"
       onpointerup="hideRole()" onpointerleave="hideRole()" onpointercancel="hideRole()"
-      oncontextmenu="return false">${holdIdle()}</div>
+      oncontextmenu="return false">${ic("eye")}Dabaye rakho, dekhne ke liye</div>
           <button class="primary" id="nextBtn" disabled onclick="nextReveal()">${ic("arrow")}Ho gaya, agla player</button>
   `;
 }
 
-/* ---------- Sounds (synthesized, no files) ---------- */
-var _ac = null, _roleShown = false;
-var _muted = false, _gest = false;
-function beep(seq) {
-  if (_muted || !_gest) return;
-  try {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    if (!_ac) _ac = new AC();
-    if (_ac.state === "suspended") _ac.resume();
-    var t = _ac.currentTime;
-    seq.forEach(function (n) {
-      var o = _ac.createOscillator(), g = _ac.createGain();
-      o.type = n.type || "sine";
-      o.frequency.setValueAtTime(n.f, t + n.at);
-      if (n.to) o.frequency.exponentialRampToValueAtTime(n.to, t + n.at + n.d);
-      g.gain.setValueAtTime(0.0001, t + n.at);
-      g.gain.exponentialRampToValueAtTime(n.v || 0.16, t + n.at + 0.015);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + n.at + n.d);
-      o.connect(g);
-      g.connect(_ac.destination);
-      o.start(t + n.at);
-      o.stop(t + n.at + n.d + 0.03);
-    });
-  } catch (e) {}
-}
-function sndShow() {
-  beep([{ f: 440, to: 660, at: 0, d: 0.09, type: "triangle" }, { f: 660, to: 990, at: 0.07, d: 0.14, type: "triangle" }]);
-  try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
-}
-function sndHide() {
-  beep([{ f: 740, to: 520, at: 0, d: 0.08, type: "triangle" }, { f: 520, to: 300, at: 0.06, d: 0.13, type: "triangle" }]);
-}
-
 function showRole(i) {
-  _roleShown = true;
-  sndShow();
   const p = S.roster[i];
   $("nextBtn").disabled = false;
   const box = $("roleBox");
   if (p.role === "spy" && !p.word) {
-    box.className = "hold open spyview";
-        box.innerHTML = `<div class="tag spy">Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
+    box.innerHTML = `<div class="tag spy">${ic("eyeoff")}Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
   } else {
-    box.className = "hold open";
-        box.innerHTML = `<div class="tag">Tumhara word</div><div class="word">${esc(p.word)}</div>`;
+    box.innerHTML = `<div class="tag">${ic("eye")}Tumhara word</div><div class="word">${esc(p.word)}</div>`;
   }
 }
 
 function hideRole() {
   const box = $("roleBox");
-  if (box) { box.className = "hold"; box.innerHTML = holdIdle(); }
-    if (_roleShown) { _roleShown = false; sndHide(); }
-}
-
-function sndNext() {
-  beep([
-    { f: 300, to: 900, at: 0, d: 0.14, type: "sawtooth", v: 0.05 },
-    { f: 784, at: 0.12, d: 0.12, type: "triangle", v: 0.15 },
-    { f: 1175, at: 0.2, d: 0.2, type: "triangle", v: 0.15 }
-  ]);
-  try { if (navigator.vibrate) navigator.vibrate([10, 30, 10]); } catch (e) {}
-}
-function sndStart() {
-  beep([
-    { f: 523, at: 0, d: 0.12, type: "triangle", v: 0.16 },
-    { f: 659, at: 0.1, d: 0.12, type: "triangle", v: 0.16 },
-    { f: 784, at: 0.2, d: 0.12, type: "triangle", v: 0.16 },
-    { f: 1047, at: 0.3, d: 0.3, type: "triangle", v: 0.18 }
-  ]);
-  try { if (navigator.vibrate) navigator.vibrate([15, 40, 15, 40, 25]); } catch (e) {}
+  if (box) box.innerHTML = ic("eye") + "Dabaye rakho, dekhne ke liye";
 }
 
 function nextReveal() {
   S.revealIdx++;
-  if (S.revealIdx >= S.roster.length) { sndStart(); return renderDiscussion(false); }
-  sndNext();
+  if (S.revealIdx >= S.roster.length) return renderDiscussion(false);
   renderReveal();
 }
 
@@ -1358,14 +1013,9 @@ function tick() {
     c.textContent = fmt(S.timerLeft);
     c.classList.toggle("low", S.timerLeft <= 30);
   }
-  if (S.timerLeft > 0 && S.timerLeft <= 10 && S._tk !== S.timerLeft) {
-      S._tk = S.timerLeft;
-      sndTick(S.timerLeft <= 3);
-    }
-    if (S.timerLeft <= 0) {
-      sndBuzz();
-      clearInterval(S.timerId);
-      goVote();
+  if (S.timerLeft <= 0) {
+    clearInterval(S.timerId);
+    goVote();
   } else if (S.timerLeft % 5 === 0) {
     saveRound("discussion");
   }
@@ -1410,7 +1060,6 @@ function renderVote() {
 function pickVote(i) {
   if (S.screen !== "vote") return;
   S.voteSel = i;
-    sndSelect();
   S.roster.forEach(function (p, k) {
     var b = $("vb" + k);
     if (b) b.classList.toggle("sel", k === i);
@@ -1432,7 +1081,6 @@ function eliminate(i) {
   const p = S.roster[i];
   if (!p || !p.alive) return;
   p.alive = false;
-    sndElim();
 
   // Last spy caught: spy gets one chance to guess the civilian word.
   if (p.role === "spy" && spiesAlive() === 0) return renderGuess(p);
@@ -1460,7 +1108,6 @@ function renderOut(p) {
 /* ---------- Spy's last chance ---------- */
 function renderGuess(p) {
   S.screen = "guess";
-    sndTense();
   // Unique words only: the packs share some words, so the decoy pool must be deduplicated.
   const everyWord = [...new Set((getPacks()[S.pack] || []).flat())];
   const pool = shuffle(everyWord.filter(w => w !== S.civWord && w !== S.spyWordText));
@@ -1489,7 +1136,6 @@ function endRound(winner, reason) {
   if (S.screen === "result") return;
   clearInterval(S.timerId);
   S.screen = "result";
-    sndEnd(winner);
   clearRound();
   const winners = S.roster.filter(p => winner === "spy" ? p.role === "spy" : p.role === "civ");
   winners.forEach(p => {
@@ -1526,7 +1172,6 @@ new MutationObserver(function () {
       return;
     }
     _lastScr = S.screen;
-        sndSwish();
     app.classList.remove("still");
     app.classList.remove("in");
   void app.offsetWidth;
@@ -1542,80 +1187,6 @@ document.addEventListener("visibilitychange", function () {
   }
 });
 window.addEventListener("pagehide", saveState);
-
-/* ---------- Sounds for everything (synthesized) ---------- */
-function vib(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
-function sndTap() { beep([{ f: 620, to: 420, at: 0, d: 0.05, type: "square", v: 0.05 }]); vib(6); }
-function sndChip() { beep([{ f: 520, to: 780, at: 0, d: 0.07, type: "triangle", v: 0.12 }, { f: 1040, at: 0.05, d: 0.06, type: "sine", v: 0.06 }]); vib(8); }
-function sndPrimary() { beep([{ f: 392, at: 0, d: 0.07, type: "triangle", v: 0.13 }, { f: 587, at: 0.06, d: 0.12, type: "triangle", v: 0.13 }]); vib(10); }
-function sndAdd() { beep([{ f: 660, to: 880, at: 0, d: 0.08, type: "triangle", v: 0.14 }, { f: 1100, at: 0.07, d: 0.14, type: "triangle", v: 0.14 }]); }
-function sndRemove() { beep([{ f: 520, to: 180, at: 0, d: 0.16, type: "sawtooth", v: 0.06 }]); vib(12); }
-function sndErr() { beep([{ f: 190, at: 0, d: 0.12, type: "square", v: 0.08 }, { f: 150, at: 0.12, d: 0.18, type: "square", v: 0.08 }]); vib([30, 40, 30]); }
-function sndSelect() { beep([{ f: 700, to: 1000, at: 0, d: 0.08, type: "triangle", v: 0.14 }]); vib(10); }
-function sndElim() { beep([{ f: 420, to: 80, at: 0, d: 0.35, type: "sawtooth", v: 0.09 }, { f: 90, at: 0.1, d: 0.3, type: "square", v: 0.07 }]); vib([40, 30, 80]); }
-function sndGo() { beep([{ f: 220, to: 660, at: 0, d: 0.2, type: "sawtooth", v: 0.06 }, { f: 880, at: 0.18, d: 0.14, type: "triangle", v: 0.15 }]); }
-function sndTense() { beep([{ f: 110, at: 0, d: 0.25, type: "sawtooth", v: 0.07 }, { f: 117, at: 0.25, d: 0.3, type: "sawtooth", v: 0.07 }, { f: 98, at: 0.55, d: 0.4, type: "sawtooth", v: 0.07 }]); vib([20, 60, 20]); }
-function sndTick(last) { beep([{ f: last ? 1400 : 1000, at: 0, d: 0.05, type: "square", v: last ? 0.09 : 0.05 }]); if (last) vib(20); }
-function sndBuzz() { beep([{ f: 160, at: 0, d: 0.35, type: "sawtooth", v: 0.1 }, { f: 120, at: 0.1, d: 0.4, type: "square", v: 0.07 }]); vib([80, 40, 120]); }
-function sndPop() { beep([{ f: 880, to: 1320, at: 0, d: 0.07, type: "sine", v: 0.1 }]); }
-function sndModal() { beep([{ f: 330, to: 520, at: 0, d: 0.1, type: "triangle", v: 0.1 }]); }
-function sndSwish() { beep([{ f: 240, to: 720, at: 0, d: 0.12, type: "sawtooth", v: 0.025 }]); }
-function sndEnd(w) {
-  if (w === "spy") {
-    beep([
-      { f: 330, at: 0, d: 0.14, type: "sawtooth", v: 0.07 },
-      { f: 311, at: 0.14, d: 0.14, type: "sawtooth", v: 0.07 },
-      { f: 262, at: 0.28, d: 0.14, type: "sawtooth", v: 0.07 },
-      { f: 196, at: 0.42, d: 0.45, type: "sawtooth", v: 0.08 }
-    ]);
-  } else {
-    beep([
-      { f: 523, at: 0, d: 0.12, type: "triangle", v: 0.16 },
-      { f: 659, at: 0.1, d: 0.12, type: "triangle", v: 0.16 },
-      { f: 784, at: 0.2, d: 0.12, type: "triangle", v: 0.16 },
-      { f: 1047, at: 0.3, d: 0.14, type: "triangle", v: 0.17 },
-      { f: 1319, at: 0.42, d: 0.4, type: "triangle", v: 0.18 }
-    ]);
-  }
-  vib([20, 40, 20, 40, 60]);
-}
-
-(function () {
-  try { _muted = localStorage.getItem("spyGame.mute") === "1"; } catch (e) {}
-  var btn = document.createElement("button");
-  btn.type = "button";
-  btn.id = "sndBtn";
-  btn.setAttribute("aria-label", "Sound");
-  var paint = function () { btn.innerHTML = ic(_muted ? "mute" : "sound"); };
-  paint();
-  btn.onclick = function () {
-    _muted = !_muted;
-    try { localStorage.setItem("spyGame.mute", _muted ? "1" : "0"); } catch (e) {}
-    paint();
-    if (!_muted) sndChip();
-  };
-  document.body.appendChild(btn);
-
-  document.addEventListener("pointerdown", function (e) {
-    _gest = true;
-    var b = e.target && e.target.closest ? e.target.closest("button") : null;
-    if (!b || b.disabled || b.id === "sndBtn" || b.id === "nextBtn" || b.classList.contains("vb")) return;
-    if (b.classList.contains("chip")) sndChip();
-    else if (b.classList.contains("primary")) sndPrimary();
-    else sndTap();
-  }, true);
-
-  var _kt = 0;
-  document.addEventListener("input", function (e) {
-    if (e.target && e.target.tagName === "INPUT") {
-      var n = Date.now();
-      if (n - _kt > 45) {
-        _kt = n;
-        beep([{ f: 900 + Math.random() * 300, at: 0, d: 0.025, type: "square", v: 0.035 }]);
-      }
-    }
-  });
-})();
 
 loadState();
 S.resume = loadRoundSaved();
