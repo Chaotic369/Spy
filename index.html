@@ -130,6 +130,38 @@ ul.players li:nth-child(5n) .av,.votes button:nth-child(5n) .av{background:linea
 .votes button.vb{background:var(--card2);padding:12px 16px;font-size:17px}
 .votes button.vb.sel{background:linear-gradient(180deg,#ff6b8a,#e0264b);color:#fff;box-shadow:0 4px 0 #8e1230,0 0 22px rgba(255,77,109,.45);transform:translateY(-2px)}
 #toast{background:var(--card2);border-radius:999px;font-weight:700;box-shadow:0 6px 0 rgba(0,0,0,.35)}
+
+/* ---- Brown / orange / red theme ---- */
+:root{--brass:#ff9d3c;--blood:#e63a1f;--card:#2a1810;--card2:#3d2417;--muted:#c9a58a;--ink:#fff3e6}
+html,body{background-color:#140c08}
+body{background-image:radial-gradient(700px 380px at 50% -120px,#7a2e10 0%,rgba(20,12,8,0) 70%),radial-gradient(520px 320px at 100% 100%,#5a1a0e 0%,rgba(20,12,8,0) 70%)}
+h1 .ic{filter:drop-shadow(0 0 8px rgba(255,138,43,.65))}
+.panel{box-shadow:0 6px 0 #120905}
+.panel.resume{background:linear-gradient(135deg,#5a2a10,#3a1a12)}
+input:focus,select:focus,button:focus-visible{background:#54301d;box-shadow:0 0 0 4px rgba(255,138,43,.3)}
+button{box-shadow:0 4px 0 #120905}
+button:active:not(:disabled){box-shadow:0 1px 0 #120905}
+button.primary{background:linear-gradient(180deg,#ffb04d,#f0661a);color:#2a1000;box-shadow:0 4px 0 #9c3a0a,0 10px 22px rgba(240,102,26,.32)}
+button.primary:active:not(:disabled){box-shadow:0 1px 0 #9c3a0a,0 4px 10px rgba(240,102,26,.22)}
+button.ghost{background:#4d2d1c;box-shadow:0 3px 0 #120905}
+button.ghost:active:not(:disabled){box-shadow:0 1px 0 #120905}
+button:disabled{box-shadow:0 4px 0 #120905}
+ul.players li{box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.av{background:linear-gradient(135deg,#ff9d3c,#e8590c)}
+ul.players li:nth-child(5n+2) .av,.votes button:nth-child(5n+2) .av{background:linear-gradient(135deg,#ff6b4a,#d62d20)}
+ul.players li:nth-child(5n+3) .av,.votes button:nth-child(5n+3) .av{background:linear-gradient(135deg,#c98a4b,#8b5a2b)}
+ul.players li:nth-child(5n+4) .av,.votes button:nth-child(5n+4) .av{background:linear-gradient(135deg,#ffc15e,#f08a1c)}
+ul.players li:nth-child(5n) .av,.votes button:nth-child(5n) .av{background:linear-gradient(135deg,#e8743b,#a8321a)}
+.score{background:linear-gradient(180deg,#ffb04d,#f0661a);color:#2a1000;box-shadow:0 2px 0 #9c3a0a}
+.tag.spy{background:linear-gradient(180deg,#ff5a3c,#c42a14);color:#fff;box-shadow:0 3px 0 #6e1608}
+.hold{background:linear-gradient(160deg,#5a2a14,#2a1810);box-shadow:0 8px 0 rgba(0,0,0,.4),0 0 0 0 rgba(255,138,43,.35)}
+.hold:active{background:linear-gradient(160deg,#703618,#38200f);box-shadow:0 4px 0 rgba(0,0,0,.4),0 0 30px rgba(255,138,43,.4)}
+@keyframes glow{0%,100%{box-shadow:0 8px 0 rgba(0,0,0,.4),0 0 0 0 rgba(255,138,43,.35)}50%{box-shadow:0 8px 0 rgba(0,0,0,.4),0 0 0 10px rgba(255,138,43,0)}}
+.word{text-shadow:0 0 18px rgba(255,138,43,.6)}
+.prog i.on{background:linear-gradient(90deg,#ffb04d,#f0661a);box-shadow:0 0 10px rgba(255,138,43,.65)}
+.big{text-shadow:0 0 22px rgba(240,102,26,.7),0 4px 0 rgba(0,0,0,.4)}
+.big.low{color:#ff5a3c;text-shadow:0 0 22px rgba(230,58,31,.85),0 4px 0 rgba(0,0,0,.4)}
+.votes button.vb.sel{background:linear-gradient(180deg,#ff5a3c,#c42a14);box-shadow:0 4px 0 #6e1608,0 0 22px rgba(230,58,31,.5)}
 </style>
 </head>
 <body>
