@@ -240,10 +240,60 @@ button:active:not(:disabled) .ic{transform:scale(.9)}
 #modal .row button{animation:popIn .35s cubic-bezier(.2,1.4,.4,1) backwards}
 #modal .row button:nth-child(2){animation-delay:.08s}
 
+#app.still>*,#app.still .panel,#app.still ul.players li,#app.still .av,#app.still .votes button,#app.still .chip,#app.still .chip.on,#app.still .tag,#app.still .tag.spy,#app.still .score,#app.still .err,#app.still .prog i.on,#app.still .hint,#app.still .word{animation:none!important}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}
-}
-</style>
+  }
+
+  /* ---- Animated background ---- */
+  html{background:linear-gradient(180deg,#1a0d07 0%,#140c08 55%,#1f0d08 100%)}
+  body{background-color:transparent}
+  #app{position:relative;z-index:1}
+  body::before,body::after{content:"";position:fixed;pointer-events:none;z-index:0}
+  body::before{
+    inset:-25%;
+    background:
+      radial-gradient(38% 34% at 20% 25%,rgba(255,122,24,.34) 0%,rgba(255,122,24,0) 70%),
+      radial-gradient(34% 30% at 80% 20%,rgba(214,45,32,.30) 0%,rgba(214,45,32,0) 70%),
+      radial-gradient(40% 36% at 70% 80%,rgba(160,82,30,.34) 0%,rgba(160,82,30,0) 70%),
+      radial-gradient(30% 28% at 15% 85%,rgba(255,176,77,.20) 0%,rgba(255,176,77,0) 70%);
+    animation:aurora 26s ease-in-out infinite alternate;
+    will-change:transform
+  }
+  body::after{
+    inset:0;
+    background-image:
+      radial-gradient(circle,rgba(255,176,77,.95) 0 1.5px,rgba(255,176,77,0) 3px),
+      radial-gradient(circle,rgba(255,122,24,.85) 0 2px,rgba(255,122,24,0) 4px),
+      radial-gradient(circle,rgba(255,90,60,.75) 0 2.5px,rgba(255,90,60,0) 5px);
+    background-size:140px 140px,220px 220px,340px 340px;
+    background-position:0 0,60px 0,120px 0;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 25%,#000 70%,transparent 100%);
+    mask-image:linear-gradient(180deg,transparent 0%,#000 25%,#000 70%,transparent 100%);
+    opacity:.55;
+    animation:embers 18s linear infinite
+  }
+  @keyframes aurora{
+    0%{transform:translate3d(-4%,-3%,0) rotate(0deg) scale(1)}
+    33%{transform:translate3d(5%,2%,0) rotate(6deg) scale(1.12)}
+    66%{transform:translate3d(-3%,5%,0) rotate(-5deg) scale(1.06)}
+    100%{transform:translate3d(4%,-4%,0) rotate(4deg) scale(1.15)}
+  }
+  @keyframes embers{
+    from{background-position:0 0,60px 0,120px 0}
+    to{background-position:0 -420px,60px -660px,120px -340px}
+  }
+  @keyframes breathe{0%,100%{opacity:.5}50%{opacity:1}}
+  #app::before{
+    content:"";position:fixed;left:0;right:0;bottom:0;height:34vh;z-index:-1;pointer-events:none;
+    background:radial-gradient(70% 100% at 50% 100%,rgba(240,102,26,.28) 0%,rgba(240,102,26,0) 75%);
+    animation:breathe 5s ease-in-out infinite
+  }
+  @media (prefers-reduced-motion:reduce){
+    body::before,body::after,#app::before{animation:none!important}
+  }
+  </style>
 </head>
 <body>
 <div id="app"></div>
@@ -1117,9 +1167,13 @@ function endRound(winner, reason) {
 
 var _lastScr = "";
 new MutationObserver(function () {
-  if (S.screen === "setup" && _lastScr === "setup") return;
-  _lastScr = S.screen;
-  app.classList.remove("in");
+  if (S.screen === _lastScr && S.screen !== "reveal") {
+      app.classList.add("still");
+      return;
+    }
+    _lastScr = S.screen;
+    app.classList.remove("still");
+    app.classList.remove("in");
   void app.offsetWidth;
   app.classList.add("in");
 }).observe(app, { childList: true });
