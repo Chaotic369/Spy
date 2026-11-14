@@ -338,6 +338,77 @@ button:active:not(:disabled) .ic{transform:scale(.9)}
       .hold .tag{font-size:15px;margin-bottom:10px}
       .hold p{margin:10px 0 0;font-size:15px;line-height:1.5;color:var(--ink);font-weight:600}
       #nextBtn{font-size:18px;padding:16px;border-radius:18px}
+
+        /* ---- Neumorphic theme ---- */
+        :root{
+          --bg:#2b1a14;--card:#2b1a14;--card2:#2b1a14;--ink:#f3e3d3;--muted:#b39580;--brass:#ff9d3c;
+          --sh-d:#1a0e09;--sh-l:#3d261c;
+          --raise:8px 8px 18px var(--sh-d),-7px -7px 16px var(--sh-l);
+          --raise-s:4px 4px 10px var(--sh-d),-3px -3px 9px var(--sh-l);
+          --inset:inset 4px 4px 9px var(--sh-d),inset -3px -3px 8px var(--sh-l);
+        }
+        html,body{background:#2b1a14;background-color:#2b1a14}
+        body{background-image:none}
+        body::before,body::after,#app::before{display:none}
+
+        h1{text-shadow:3px 3px 6px var(--sh-d),-2px -2px 5px var(--sh-l)}
+        h1 .ic{filter:none}
+        .hero h1.title{background:none;-webkit-text-fill-color:var(--brass);color:var(--brass);filter:none;text-shadow:4px 4px 8px var(--sh-d),-3px -3px 7px var(--sh-l)}
+        .hero{margin-top:14px}
+
+        .panel,.panel.resume{background:var(--bg);box-shadow:var(--raise);border-radius:26px}
+        label{color:var(--muted)}
+        label .ic{background:var(--bg);box-shadow:var(--raise-s);color:var(--brass)}
+        label .cnt{background:var(--bg);box-shadow:var(--inset)}
+
+        input{background:var(--bg);box-shadow:var(--inset);border-radius:16px}
+        input:focus,select:focus{background:var(--bg);box-shadow:var(--inset),0 0 16px rgba(255,157,60,.28)}
+
+        button{background:var(--bg);color:var(--ink);box-shadow:var(--raise-s);border-radius:16px}
+        button:active:not(:disabled){transform:none;box-shadow:var(--inset)}
+        button:focus-visible{background:var(--bg);box-shadow:var(--raise-s),0 0 16px rgba(255,157,60,.35)}
+        button.primary{background:var(--bg);color:var(--brass);font-weight:800;box-shadow:var(--raise-s)}
+        button.primary:active:not(:disabled){box-shadow:var(--inset)}
+        button.primary::after{display:none}
+        button.ghost{background:var(--bg);color:var(--muted);box-shadow:var(--raise-s)}
+        button.ghost:active:not(:disabled){box-shadow:var(--inset)}
+        button:disabled{filter:none;opacity:.5;box-shadow:var(--inset)}
+
+        .chip{background:var(--bg);color:var(--muted);box-shadow:var(--raise-s)}
+        .chip.on{background:var(--bg);color:var(--brass);box-shadow:var(--inset);transform:none}
+        .chip.on:active:not(:disabled){box-shadow:var(--inset)}
+
+        ul.players li{background:var(--bg);box-shadow:var(--inset);border-radius:16px}
+        .av,ul.players li .av,.votes button .av{background:var(--bg)!important;color:var(--brass);box-shadow:var(--raise-s)}
+        .av.lg{box-shadow:var(--raise)}
+        .score{background:var(--bg);color:var(--brass);box-shadow:var(--inset)}
+        .tag{background:var(--bg);color:var(--muted);box-shadow:var(--raise-s)}
+        .tag.spy{background:var(--bg);color:#ff6a4d;box-shadow:var(--inset)}
+        .stat{background:var(--bg);box-shadow:var(--raise-s)}
+
+        .prog i{background:var(--bg);box-shadow:var(--inset)}
+        .prog i.on{background:var(--brass);box-shadow:0 0 10px rgba(255,157,60,.5)}
+        .prog i.cur{box-shadow:0 0 14px rgba(255,157,60,.8)}
+
+        .hold{background:var(--bg);box-shadow:var(--raise);animation:none}
+        .hold:active{background:var(--bg);transform:none;box-shadow:var(--inset)}
+        .hold.open,.hold.spyview{background:var(--bg);box-shadow:var(--inset)}
+        .hold.spyview .tag.spy,.hold.spyview p{color:#ff8a6d}
+        .fp{background:var(--bg);box-shadow:var(--raise);animation:pulseRing 2.4s ease-out infinite}
+        .fp .ic{color:var(--brass)}
+        @keyframes pulseRing{0%{box-shadow:var(--raise),0 0 0 0 rgba(255,157,60,.35)}100%{box-shadow:var(--raise),0 0 0 34px rgba(255,157,60,0)}}
+        .hl{color:var(--ink)}
+        .word{color:var(--brass);text-shadow:0 0 14px rgba(255,157,60,.35)}
+
+        .big{color:var(--ink);text-shadow:4px 4px 8px var(--sh-d),-3px -3px 7px var(--sh-l)}
+        .big.low{color:#ff6a4d;text-shadow:4px 4px 8px var(--sh-d),-3px -3px 7px var(--sh-l)}
+
+        .votes button.vb{background:var(--bg);box-shadow:var(--raise-s)}
+        .votes button.vb.sel{background:var(--bg);color:#ff6a4d;box-shadow:var(--inset);transform:none}
+
+        #toast{background:var(--bg);box-shadow:var(--raise-s)}
+        #modal{background:rgba(14,7,4,.72)}
+        #modal .dlg{background:var(--bg);box-shadow:var(--raise)}
       </style>
 </head>
 <body>
@@ -867,7 +938,7 @@ function renderSetup() {
 
   app.innerHTML = `
     <div class="hero">
-          <div class="badge">${ic("eye")}</div>
+          
           <h1 class="title">SPY</h1>
           <p class="sub">Ek phone, sab ek hi taraf. Kaun chhupa hai?</p>
           <div class="stats">
@@ -896,7 +967,7 @@ function renderSetup() {
       ${chips(Object.keys(getPacks()).map(function (k, i) { return { v: k, t: esc(k), a: String(i) }; }), S.pack, "setPack")}
             <p class="hint">${packHint()}</p>
 
-      <label>${ic("eyeoff")}Spy kitne honge?</label>
+      <label>${ic("star")}Spy kitne honge?</label>
       ${chips([1, 2, 3].filter(x => x <= maxSpy).map(x => ({ v: x, t: String(x), a: "'spyCount'," + x })), S.spyCount, "setOpt")}
 
       <label>${ic("lock")}Spy ko word kaisa milega?</label>
@@ -1047,10 +1118,10 @@ function showRole(i) {
   const box = $("roleBox");
   if (p.role === "spy" && !p.word) {
     box.className = "hold open spyview";
-        box.innerHTML = `<div class="tag spy">${ic("eyeoff")}Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
+        box.innerHTML = `<div class="tag spy">Tum SPY ho</div><p>Word nahi pata. Baaton se pakdo mat jaana.</p>`;
   } else {
     box.className = "hold open";
-        box.innerHTML = `<div class="tag">${ic("eye")}Tumhara word</div><div class="word">${esc(p.word)}</div>`;
+        box.innerHTML = `<div class="tag">Tumhara word</div><div class="word">${esc(p.word)}</div>`;
   }
 }
 
